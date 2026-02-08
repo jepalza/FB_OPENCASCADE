@@ -31,6 +31,14 @@ Para poder compilar la DLL y ejecutar en FreeBasic, se necesita tener instalado 
 
 --
 
+En el ejemplo sencillo de FreeBasic, se crean automaticamente 3 entidades: cubo, cuboide girado y esfera
+
+y para la salida de datos STEP e IGES se crea una entidad Booleana al cortar el cubo con la esfera.
+
+Para ver el resultado, pulsar las teclas 1, 2 o 3 en la ventana DOS y vemos la salida en la ventana grafica.
+
+--
+
 Ademas, puede que sean necesarias las librerias propias de MINGW para ejecutar el codigo compilado en FB:
 
 libgcc_s_dw2-1.dll
