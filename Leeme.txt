@@ -1,0 +1,13 @@
+Joseba Epalza <jepalza> gmail punto com , enero 2026
+
+C-WRAPPER de las librerias OpenCascade < https://dev.opencascade.org/ > version 7.6
+empleando las rutinas de < https://github.com/marcuswu/occwrapper > con ligeras modificaciones
+
+aun esta poco avanzado, solo comprobados tres tipos de entidades y dos formas de salida de ficheros
+
+Integrar en un C-WRAPPER la complejidad de las librerias OPENCASCADE es una tarea titanica.
+Partiendo de las ya convertidas por Marcus Wu 'marcuswu' he añadido algunas cosas mas , como un visualizador 
+simple usando el ejemplo de < https://github.com/gkv311/occt-hello/ > con ligeras modificaciones para
+poderlo llamar desde FreeBasic.
+
+Queda mucho, mucho, trabajo por hacer, y poco a poco ire implementando mas cosas.
