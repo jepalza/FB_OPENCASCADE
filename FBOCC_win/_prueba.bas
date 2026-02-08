@@ -106,7 +106,7 @@ end sub
 '	BRepFilletAPIMakeChamfer_Add(shap22,shap2,10)
 '	shap22=BRepFilletAPIMakeFillet_Shape(shap22)
 	
-	' cortar CUBO con CUBOIDE
+	' cortar CUBO con ESFERA
 	dim as BRepAlgoAPIBooleanOperation cut
 	cut=BRepAlgoAPICut_ToBooleanOperation(booleancut)
 
@@ -148,3 +148,4 @@ end sub
 	ThreadWait(pThread)
 
 ' **************************************
+
