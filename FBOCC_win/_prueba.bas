@@ -122,17 +122,17 @@ end sub
 	
 	dim as IGESControlWriter FileIGES=IGESControlWriter_Init()
 	IGESControlWriter_Add(FileIGES,shap33,0)
-	IGESControlWriter_Add(FileIGES,shap0,0)
-	IGESControlWriter_Add(FileIGES,shap1,0)
-	IGESControlWriter_Add(FileIGES,shap2,0)
+	'IGESControlWriter_Add(FileIGES,shap0,0)
+	'IGESControlWriter_Add(FileIGES,shap1,0)
+	'IGESControlWriter_Add(FileIGES,shap2,0)
 	IGESControlWriter_Write(FileIGES,strptr("_prueba.igs"))
 	IGESControlWriter_Free(FileIGES)	
 
 	dim as STEPControlWriter FileSTEP=STEPControlWriter_Init()
 	STEPControlWriter_Add(FileSTEP,shap33,0)
-	STEPControlWriter_Add(FileSTEP,shap0,0)
-	STEPControlWriter_Add(FileSTEP,shap1,0)
-	STEPControlWriter_Add(FileSTEP,shap2,0)
+	'STEPControlWriter_Add(FileSTEP,shap0,0)
+	'STEPControlWriter_Add(FileSTEP,shap1,0)
+	'STEPControlWriter_Add(FileSTEP,shap2,0)
 	STEPControlWriter_Write(FileSTEP,strptr("_prueba.step"))
 	STEPControlWriter_Free(FileSTEP)	
 	
@@ -146,4 +146,5 @@ end sub
 
 	' cierro OCC (nota: por ahora no vuelve desde 'OCC_Thread', queda pendiente de revisar
 	ThreadWait(pThread)
+
 ' **************************************
