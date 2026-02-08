@@ -53,11 +53,10 @@ Note: compiled for WIN32 for simplicity.
 
 
 Translated with DeepL.com (free version)
-.
-.
-.
-.
-.
+--
+--
+--
+-- Español
 Freebasic para la integracion de OPENCASCADE "OCC" CAD
 
 C-WRAPPER de las librerias OpenCascade < https://dev.opencascade.org > version 7.6
