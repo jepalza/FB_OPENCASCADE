@@ -44,7 +44,7 @@ libwinpthread-1.dll
 There is still a lot of work to be done, and I will gradually implement more features.
 
 --
-The reason for using version OCC7.7 from 2022 on WIN32 is for practical reasons, given that since versions 7.8 there is no longer a Windows installer, and furthermore, there is no longer a project for VC10 and support for X32 has been removed, and I, even in 2026, am still working on x32 and VC10, I can't help it....
+The reason for using version OCC7.7 from 2022 on WIN32 is for practical reasons, given that since versions 7.8 there is no longer a Windows installer, and furthermore, there is no longer a project for VC10 and support for X32 has been removed, and I, even in 2026, am still working on x32 and VC10, I can't avoid it....
 --
 
 Note: compiled for WIN32 for simplicity.
