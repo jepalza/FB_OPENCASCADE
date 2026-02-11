@@ -1,5 +1,4 @@
 
-md obj
 del /s *.o
 
 del ..\FBOCC_WIN\FBOCCWrapper.dll
