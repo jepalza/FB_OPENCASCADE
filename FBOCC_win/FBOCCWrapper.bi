@@ -1,8 +1,3 @@
-' Joseba Epalza <jepalza> gmail punto com , enero 2026
-' C-WRAPPER de las librerias OpenCascade < https://dev.opencascade.org/ > version 7.6
-' empleando las rutinas de < https://github.com/marcuswu/occwrapper > con ligeras modificaciones
-' aun esta poco avanzado, solo comprobados tres tipos de entidades y dos formas de salida de ficheros
-
 
 
   Type As ULong gcCircle
@@ -305,14 +300,6 @@
   Declare Function gpPnt_TranslatedPoints Cdecl Alias "gpPnt_TranslatedPoints"(ByVal pnt As gpPnt ,ByVal pnt1 As gpPnt ,ByVal pnt2 As gpPnt) As gpPnt 
 
 ' ---------------------------------------
-' Fichero: gp_quaternion.h
-  Declare Function gpQuaternion_Inverted Cdecl Alias "gpQuaternion_Inverted"(ByVal q As gpQuaternion) As gpQuaternion 
-  Declare Function gpQuaternion_Multiplied Cdecl Alias "gpQuaternion_Multiplied"(ByVal q As gpQuaternion ,ByVal other As gpQuaternion) As gpQuaternion 
-  Declare Function gpQuaternion_IsEqual Cdecl Alias "gpQuaternion_IsEqual"(ByVal q As gpQuaternion ,ByVal other As gpQuaternion) As Boolean 
-  Declare Function gpQuaternion_GetRotationAngle Cdecl Alias "gpQuaternion_GetRotationAngle"(ByVal q As gpQuaternion) As Double 
-  Declare Sub      gpQuaternion_Free Cdecl Alias "gpQuaternion_Free"(ByVal q As gpQuaternion) 
-
-' ---------------------------------------
 ' Fichero: gp_trsf.h
   Declare Function gpTrsf_Init Cdecl Alias "gpTrsf_Init"() As gpTrsf 
   Declare Sub      gpTrsf_SetMirror Cdecl Alias "gpTrsf_SetMirror"(ByVal trsf As gpTrsf ,ByVal axis As gpAx1) 
@@ -320,13 +307,13 @@
   Declare Sub      gpTrsf_SetMirrorAx2 Cdecl Alias "gpTrsf_SetMirrorAx2"(ByVal transform As gpTrsf ,ByVal axis As gpAx2) 
   Declare Sub      gpTrsf_SetTransformation Cdecl Alias "gpTrsf_SetTransformation"(ByVal transform As gpTrsf ,ByVal from As gpAx3 ,ByVal to_ As gpAx3) 
   Declare Sub      gpTrsf_SetRotation Cdecl Alias "gpTrsf_SetRotation"(ByVal transform As gpTrsf ,ByVal axis As gpAx1 ,ByVal rads As Double) 
+	
   Declare Sub      gpTrsf_SetTranslation Cdecl Alias "gpTrsf_SetTranslation"(ByVal transform As gpTrsf ,ByVal vec As gpVec) 
   Declare Function gpTrsf_GetRotation Cdecl Alias "gpTrsf_GetRotation"(ByVal transform As gpTrsf) As gpQuaternion 
   Declare Sub      gpTrsf_Free Cdecl Alias "gpTrsf_Free"(ByVal transform As gpTrsf) 
 
 ' ---------------------------------------
 ' Fichero: gp_vec.h
-  Declare Function gpResolution Cdecl Alias "gpResolution"() As Double 
   Declare Function gpVec_Init Cdecl Alias "gpVec_Init"(ByVal x As Double ,ByVal y As Double ,ByVal z As Double) As gpVec 
   Declare Function gpVec_InitDir Cdecl Alias "gpVec_InitDir"(ByVal dirs As gpDir) As gpVec 
   Declare Function gpVec_InitPoints Cdecl Alias "gpVec_InitPoints"(ByVal start As gpPnt ,ByVal end As gpPnt) As gpVec 
@@ -340,6 +327,16 @@
   Declare Function gpVec_Crossed Cdecl Alias "gpVec_Crossed"(ByVal v As gpVec ,ByVal other As gpVec) As gpVec 
   Declare Function gpVec_Normalized Cdecl Alias "gpVec_Normalized"(ByVal v As gpVec) As gpVec 
   Declare Function gpVec_Magnitude Cdecl Alias "gpVec_Magnitude"(ByVal v As gpVec) As Double 
+	'
+  Declare Function gpResolution Cdecl Alias "gpResolution"() As Double 
+
+' ---------------------------------------
+' Fichero: gp_quaternion.h
+  Declare Function gpQuaternion_Inverted Cdecl Alias "gpQuaternion_Inverted"(ByVal q As gpQuaternion) As gpQuaternion 
+  Declare Function gpQuaternion_Multiplied Cdecl Alias "gpQuaternion_Multiplied"(ByVal q As gpQuaternion ,ByVal other As gpQuaternion) As gpQuaternion 
+  Declare Function gpQuaternion_IsEqual Cdecl Alias "gpQuaternion_IsEqual"(ByVal q As gpQuaternion ,ByVal other As gpQuaternion) As Boolean 
+  Declare Function gpQuaternion_GetRotationAngle Cdecl Alias "gpQuaternion_GetRotationAngle"(ByVal q As gpQuaternion) As Double 
+  Declare Sub      gpQuaternion_Free Cdecl Alias "gpQuaternion_Free"(ByVal q As gpQuaternion) 
 
 ' ---------------------------------------
 ' Fichero: occutils.h
