@@ -2,7 +2,7 @@
 Freebasic for OPENCASCADE “OCC” CAD integration
 ...
 
-![opencascade1](https://github.com/jepalza/FB_OPENCASCADE/blob/main/pictures/visualizador/visualizador.png)
+![opencascade1](https://github.com/jepalza/FB_OPENCASCADE/blob/main/visualizador/visualizador.png)
 
 ...
 
