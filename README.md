@@ -1,17 +1,13 @@
 # FB_OPENCASCADE
 Freebasic for OPENCASCADE “OCC” CAD integration
 
-C-WRAPPER for OpenCascade libraries < https://dev.opencascade.org > version 7.6
+C-WRAPPER for OpenCascade libraries < https://dev.opencascade.org > version 7.7
 
 using routines from < https://github.com/marcuswu/occwrapper > with slight modifications.
 
 --
 
 Still in the early stages, only three types of entities and two file output formats have been tested.
-
-STEP output works well, but IGES output still needs work, as entities
-
-constructed from other entities or modified entities are not recognized and are output incorrectly.
 
 --
 
@@ -25,15 +21,13 @@ it can be called from FreeBasic.
 
 --
 
-In order to compile the DLL and run it in FreeBasic, OPENCASCADE V7.6 must be installed.
+In order to compile the DLL and run it in FreeBasic, OPENCASCADE V7.7 must be installed.
 
 --
 
-In the simple FreeBasic example, three entities are automatically created: cube, rotated cuboid, and sphere.
+In the simple FreeBasic example, three entities are automatically created: cube, rotated cube box, and sphere.
 
 For STEP and IGES data output, a Boolean entity is created when the cube is cut with the sphere.
-
-To see the result, press keys 1, 2, or 3 in the DOS window, and the output will be displayed in the graphics window.
 
 --
 
@@ -59,21 +53,15 @@ Translated with DeepL.com (free version)
 -- Español
 Freebasic para la integracion de OPENCASCADE "OCC" CAD
 
-C-WRAPPER de las librerias OpenCascade < https://dev.opencascade.org > version 7.6
+C-WRAPPER de las librerias OpenCascade < https://dev.opencascade.org > version 7.7
 
 empleando las rutinas de < https://github.com/marcuswu/occwrapper > con ligeras modificaciones.
 
 --
 
-
 Aun esta poco avanzado, solo comprobados tres tipos de entidades y dos formas de salida de ficheros
 
-La salida STEP esta bien lograda, la salida IGES aun le queda trabajo por hacer, dado que las entidades
-
-construidas mediante otras o modificadas, no las reconoce y salen descompuestas.
-
 --
-
 
 Integrar en un C-WRAPPER la complejidad de las librerias OPENCASCADE es una tarea titanica.
 
@@ -85,15 +73,13 @@ poderlo llamar desde FreeBasic.
 
 --
 
-Para poder compilar la DLL y ejecutar en FreeBasic, se necesita tener instalado OPENCASCADE V7.6
+Para poder compilar la DLL y ejecutar en FreeBasic, se necesita tener instalado OPENCASCADE V7.7
 
 --
 
-En el ejemplo sencillo de FreeBasic, se crean automaticamente 3 entidades: cubo, cuboide girado y esfera
+En el ejemplo sencillo de FreeBasic, se crean automaticamente 3 entidades: cubo, caja girada y esfera
 
-y para la salida de datos STEP e IGES se crea una entidad Booleana al cortar el cubo con la esfera.
-
-Para ver el resultado, pulsar las teclas 1, 2 o 3 en la ventana DOS y vemos la salida en la ventana grafica.
+y para la salida de datos STEP e IGES se crea una entidad Booleana al cortar el cubo con la esfera y la caja.
 
 --
 
