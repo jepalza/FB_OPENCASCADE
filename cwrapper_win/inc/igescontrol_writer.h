@@ -1,5 +1,4 @@
 // Joseba Epalza, 2026, guardar como archivos IGES solo entidades 3D basicas.
-// las entidades complejas o formadas por caras no se guardan bien de momento.
 
 #include <occ_types.h>
 

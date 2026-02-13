@@ -37,7 +37,7 @@ extern "C" {
     typedef void* BRepPrimAPIMakeCylinder;
     typedef void* BRepPrimAPIMakePrism;
     typedef void* BRepPrimAPIMakeRevol;
-    typedef void* BRepPrimAPIMakeSphere; // Jepalza, esferas
+
 	
     typedef void* GPropGProps;
     typedef void* GeomAdapterCurve;
@@ -59,7 +59,11 @@ extern "C" {
     typedef void* TopExpExplorer;
     typedef void* TopLocLocation;
     typedef void* TopToolsListOfShape;
-    typedef void* AISShape; // Joseba Epalza, para entidades a mostrar en el visualizador
+	 
+	 // Joseba Epalza <jepalza>
+    typedef void* AISShape; // entidades que se envian al visualizador
+    typedef void* AISViewController; // manejador de eventos de ventana y raton
+	 typedef void* BRepPrimAPIMakeSphere; // esferas
 #ifdef __cplusplus
 }
 #endif
