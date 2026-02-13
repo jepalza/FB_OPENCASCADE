@@ -28,14 +28,16 @@
 // globales para la multitarea de FreeBasic
 Handle(AIS_InteractiveContext) myContextGlobal;
 Handle(V3d_View) myViewGlobal;
-
+HWND FreeBasicWin;
+  Handle(V3d_Viewer) aViewer;
+  
 //! Sample single-window viewer class.
 class OccWinViewer : public AIS_ViewController
 {
 public:
   Handle(AIS_InteractiveContext) myContext;
   Handle(V3d_View) myView;
-  Handle(V3d_Viewer) aViewer;
+  // Handle(V3d_Viewer) aViewer;
   Handle(WNT_Window) aWindow;
   
   //! Main constructor.
@@ -46,22 +48,16 @@ public:
     Handle(Graphic3d_GraphicDriver) aDriver = new OpenGl_GraphicDriver (aDisplay);
 
     // viewer setup
-    //Handle(V3d_Viewer) 
-	 aViewer = new V3d_Viewer (aDriver);
+	aViewer = new V3d_Viewer (aDriver);
     aViewer->SetDefaultLights();
     aViewer->SetLightOn();
 
     // view setup
     myView = new V3d_View (aViewer);
 
-    const TCollection_AsciiString aClassName ("MyWinClass");
-    Handle(WNT_WClass) aWinClass = new WNT_WClass (aClassName.ToCString(), &windowProcWrapper,
-                                                   CS_VREDRAW | CS_HREDRAW, 0, 0,
-                                                   ::LoadCursor (NULL, IDC_ARROW));
-    aWindow = new WNT_Window ("OCCT Viewer", aWinClass,  WS_OVERLAPPEDWINDOW,
-                                                 100, 100, 512, 512, Quantity_NOC_BLACK);
-    ::SetWindowLongPtrW ((HWND )aWindow->NativeHandle(), GWLP_USERDATA, (LONG_PTR )this);
+    ::SetWindowLongPtrW ((HWND)FreeBasicWin, GWLP_USERDATA, (LONG_PTR )this);
 
+	aWindow = new WNT_Window(FreeBasicWin);
     myView->SetWindow (aWindow);
     myView->SetBackgroundColor (Quantity_NOC_GRAY50);
     myView->TriedronDisplay (Aspect_TOTP_LEFT_LOWER, Quantity_NOC_WHITE, 0.1);
@@ -69,12 +65,6 @@ public:
 
     // interactive context and demo scene
     myContext = new AIS_InteractiveContext (aViewer);
-
-	 // Cubo de ejemplo
-    // TopoDS_Shape aShape = BRepPrimAPI_MakeBox (100, 100, 100).Solid();
-    // Handle(AIS_InteractiveObject) aShapePrs = new AIS_Shape (aShape);
-    // myContext->Display (aShapePrs, AIS_Shaded, 0, false);
-    // myView->FitAll (0.01, false);
 
 	 // actualiza vista
     aWindow->Map();
@@ -91,7 +81,7 @@ public:
   const Handle(V3d_Viewer)& Viewer() const { return aViewer; }
 
 private:
-  //! Handle expose event.
+  // ! Handle expose event.
   virtual void ProcessExpose() override
   {
     if (!myView.IsNull())
@@ -100,7 +90,7 @@ private:
     }
   }
 
-  //! Handle window resize event.
+  // ! Handle window resize event.
   virtual void ProcessConfigure (bool theIsResized) override
   {
     if (!myView.IsNull() && theIsResized && !myView->Window().IsNull())
@@ -112,9 +102,10 @@ private:
     }
   }
 
-  //! Handle input.
+  // ! Handle input.
   virtual void ProcessInput() override
   {
+	// (OccWinViewer* )::MessageBeep(0); // prueba
     if (!myView.IsNull())
     {
       ProcessExpose();
@@ -125,6 +116,7 @@ private:
   //! Window message handler.
   static LRESULT WINAPI windowProcWrapper (HWND theWnd, UINT theMsg, WPARAM theParamW, LPARAM theParamL)
   {
+	  // (OccWinViewer* )::MessageBeep(0); // prueba
     if (theMsg == WM_CLOSE)
     {
       exit (0);
@@ -151,34 +143,28 @@ private:
 
 
 // ---------------------------- EXPORT DLL -------------------------------
-int OCCViewer_Init( // devuelve los punteros a los manejadores de ventanas para que FreeBasic los emplee
-		Handle(V3d_View) FBView,
-		Handle(AIS_InteractiveContext) FBContext )
+int OCCViewer_Init(  HWND FB_Window ,	 
+							int* FB_Context,  
+							int* FB_View
+							)
+// entrada del manejador de ventanas HWND desde FreeBasic
 {
+	FreeBasicWin=FB_Window; // asigna a global
+
+   OSD::SetSignal (false);	
 	OccWinViewer aViewer;
-   OSD::SetSignal (false);
 
 	// las devuelve a FreeBasic por si son necesarias
-	FBView=aViewer.myView; 
-	FBContext=aViewer.myContext;	
+	*FB_Context=&aViewer.myContext;	
+	*FB_View=&aViewer.myView; 
+
+	// y las asigna a globales
+   myContextGlobal=aViewer.myContext;
+	myViewGlobal=aViewer.myView;
 	
-	// y las asigna a globales para que FreeBasic pueda hacer cambios
-   myContextGlobal=FBContext;
-   myViewGlobal=FBView;
-  
-  // WinAPI message loop
-  MSG aMsg = {};
-  for (;;) // infinito, nunca sale
-  {
-    if (GetMessageW (&aMsg, NULL, 0, 0) <= 0)
-    {
-      return 0;
-    }
-     TranslateMessage(&aMsg);
-     DispatchMessageW(&aMsg);
-  }
-  
-  return 1; // nunca vuelve, pero lo dejo por si acaso
+	// printf("context cpp %d\n",*FB_Context);
+	// printf("view cpp %d\n",*FB_View);
+  return 1; 
 }
 
 
@@ -199,3 +185,68 @@ int OCCViewer_Add(TopoDS_Shape aisShape, int mode)
 }
 
 
+// eventos graficos: modo=0 solo movimientos, modo=1(defecto) refresca pantalla, modo=2 cambia medidas de pantalla
+int OCCViewer_Update(int modo=1, int mx=0, int my=0, int v1=0, int v2=0, int mb=0)
+{
+		//myViewGlobal->StartRotation(mx, my); // punto de rotacion
+		// control de eventos de raton
+		if(mb==11) // boton izquierdo, rotaciones
+		{
+			myViewGlobal->StartRotation(mx, my); // punto de rotacion en coordenadas del raton
+			myViewGlobal->Rotation(v1,v2);
+		}
+		
+		if(mb==21) // boton derecho translaciones
+		{
+			//myViewGlobal->Place (0, 0, 1); // desde el centro (por ahora)
+			myViewGlobal->Translate(v1,v2,0); // x,y,z=0
+		}
+		
+		if(mb==31) // boton medio lupas
+		{
+			// myViewGlobal->Scale(v1,v2,0); // x,y,z=0
+			myViewGlobal->Zoom(mx,my,v1,v2); 
+		}
+
+// gp_Trsf translationTransform;
+// translationTransform.SetTranslation(gp_Vec(dx, dy, dz));
+// myContextGlobal->SetLocation(aisShape, TopLoc_Location(translationTransform));
+
+
+		// en caso de evento RESIZE desde windows
+		if (modo==2)
+		{
+			  myViewGlobal->Window()->DoResize();
+			  myViewGlobal->MustBeResized();
+			  myViewGlobal->InvalidateImmediate();
+		}
+		
+		// actualiza pantalla solo si se indica
+	  if (modo==1) myViewGlobal->FitAll (0.01, false);
+	  
+	  // por defecto redibuja
+     myViewGlobal->Redraw();
+	  
+	return 1; // correcto
+}
+
+/*
+// Example within a mouse wheel event
+void wheelEvent(QWheelEvent *event) {
+    QPoint p = event->pos();
+    // 1. Initialize zoom at current mouse position
+    myView->StartZoomAtPoint(p.x(), p.y());
+    
+    // 2. Calculate zoom factor based on wheel delta
+    double delta = (double)(event->delta()) / (15 * 8);
+    int x = p.x();
+    int y = p.y();
+    // Formula to calculate new zoom point based on delta
+    int x1 = (int)(p.x() + width() * delta / 100);
+    int y1 = (int)(p.y() + height() * delta / 100);
+    
+    // 3. Apply zoom
+    myView->ZoomAtPoint(x, y, x1, y1);
+    myView->Invalidate(); // Refresh the view
+}
+*/

@@ -1,5 +1,4 @@
 // Joseba Epalza, 2026, guardar como archivos IGES solo entidades 3D basicas.
-// es un preliminar, las entidades complejas o formadas por caras no se guardan bien de momento.
 
 #include <IGESControl_Writer.hxx>
 
@@ -20,6 +19,8 @@ IGESControlWriter IGESControlWriter_Init() {
 void IGESControlWriter_Add(IGESControlWriter writer, TopoDSShape shape, IGESControlIgesModelType mode) {
 	IGESControl_Writer *w = (IGESControl_Writer *) writer;
 	TopoDS_Shape *s = (TopoDS_Shape *) shape;
+	// variable 'mode' no empleada de momento, para el futuro
+	printf("%d\n",mode);
 	w->AddShape(*s);
 }
 
