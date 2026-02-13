@@ -1,0 +1,55 @@
+#include <gp_Trsf.hxx>
+#include <gp_Quaternion.hxx>
+#include <gp_trsf.h>
+
+gpTrsf gpTrsf_Init() {
+    gp_Trsf * ret = new gp_Trsf();
+    return (void*) ret;
+}
+
+void gpTrsf_SetMirror(gpTrsf transform, gpAx1 axis){
+    gp_Trsf * trsf = (gp_Trsf *)transform;
+    gp_Ax1 * a = (gp_Ax1 *)axis;
+    trsf->SetMirror(*a);
+}
+
+void gpTrsf_SetMirrorAx1(gpTrsf transform, gpAx1 axis){
+    gpTrsf_SetMirror(transform, axis);
+}
+
+void gpTrsf_SetMirrorAx2(gpTrsf transform, gpAx2 axis){
+    gp_Trsf * trsf = (gp_Trsf *)transform;
+    gp_Ax2 * a = (gp_Ax2 *)axis;
+    trsf->SetMirror(*a);
+}
+
+void gpTrsf_SetTransformation(gpTrsf transform, gpAx3 from, gpAx3 to) {
+    gp_Trsf * trsf = (gp_Trsf *)transform;
+    gp_Ax3 * f = (gp_Ax3 *)from;
+    gp_Ax3 * t = (gp_Ax3 *)to;
+    trsf->SetTransformation(*f, *t);
+}
+
+void gpTrsf_SetRotation(gpTrsf transform, gpAx1 axis, double rads) {
+    gp_Trsf * trsf = (gp_Trsf *)transform;
+    gp_Ax1 * a = (gp_Ax1 *)axis;
+    trsf->SetRotation(*a, rads);
+}
+
+void gpTrsf_SetTranslation(gpTrsf transform, gpVec vec) {
+    gp_Trsf * trsf = (gp_Trsf *)transform;
+    gp_Vec * v = (gp_Vec *)vec;
+    trsf->SetTranslation(*v);
+}
+
+gpQuaternion gpTrsf_GetRotation(gpTrsf transform) {
+    gp_Trsf * trsf = (gp_Trsf *)transform;
+    gp_Quaternion *q = new gp_Quaternion();
+    *q = trsf->GetRotation();
+    return (void *) q;
+}
+
+void gpTrsf_Free(gpTrsf transform) {
+    gp_Trsf * trsf = (gp_Trsf *)transform;
+    delete trsf;
+}
