@@ -1,0 +1,59 @@
+// retocado a mano por Jepalza
+#include ".\Res\Res.bi"
+
+//LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+LANGUAGE LANG_SPANISH, SUBLANG_SPANISH
+
+IDC_MAINICON ICON DISCARDABLE ".\Res\icon_occ.ico"
+
+ID_TOOLBAR_LARGA BITMAP ".\Res\menu_bar_larga.bmp"
+
+IDR_MENUS MENU
+LANGUAGE LANG_SPANISH, SUBLANG_SPANISH
+BEGIN
+  POPUP "&Fichero"
+  BEGIN
+    MENUITEM "&Nuevo",  32776
+    MENUITEM "&Abrir",  32777
+    MENUITEM "&Salvar",  32778
+    MENUITEM "Salvar Como",  32779
+    MENUITEM SEPARATOR
+    POPUP "SubMenus"
+    BEGIN
+      MENUITEM "uno",  32794
+      MENUITEM "dos",  32795
+      MENUITEM "tres",  32796
+      MENUITEM "cuatro",  32800
+      MENUITEM SEPARATOR
+      MENUITEM "separado del resto",  32797
+    END
+	 MENUITEM SEPARATOR
+	 MENUITEM "&Salir",  32780
+  END
+  POPUP "&Otro Menu"
+  BEGIN
+    MENUITEM "Deshacer(&D)",  32965
+    MENUITEM "ReHacer(&R)",  32966
+    MENUITEM SEPARATOR
+    MENUITEM "Seleccionar todo(&S)",  32839
+    MENUITEM "Invertir Seleccion",  32967
+	 MENUITEM SEPARATOR
+    MENUITEM "Acerca de...",  IDM_ABOUT
+  END
+END
+
+// ejemplo de ventana ABOUT creada como DIALOG (nota: DIALOG esta descatalagado, ahora se debe usar DIALOGEX)
+// nameID DIALOGEX x, y, width, height [ , helpID] [optional-statements]  BEGIN control-statements END
+IDD_ABOUT DIALOGEX 100, 100, 212, 68
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Ejemplo de 'Acerca De'"
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+FONT 10, "Times New Roman"
+BEGIN
+	CONTROL "OpenCascade Wrapper par FreeBasic", 1, BUTTON, BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP, 155, 47, 50, 14 
+	CONTROL 128, -1, STATIC, SS_ICON | WS_CHILD | WS_VISIBLE, 7, 7, 21, 20 
+	CONTROL "", -1, STATIC, SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 36, 18, 167, 8 
+	CONTROL "Libre de uso, Joseba Epalza <jepalza> 2026", -1, STATIC, SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 36, 29, 135, 8 
+	CONTROL "Opencascade: https://dev.opencascade.org/", 1332, STATIC, SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 101, 48, 48, 12 
+	CONTROL "Emplando OCC V7.7 de 2022", 1451, STATIC, SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 36, 7, 133, 8 
+END

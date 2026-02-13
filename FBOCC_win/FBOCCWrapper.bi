@@ -1,4 +1,4 @@
-
+  
 
   Type As ULong gcCircle
   Type As ULong gcSurface
@@ -55,10 +55,20 @@
   Type As ULong TopLocLocation
   Type As ULong TopToolsListOfShape
 
+  Type As ULong AISViewController ' eventos raton y ventanas
+
+
 '----------------------------------------
 ' OCC Viewer (jepalza)
-  Declare Function OCCViewer_Init Cdecl Alias "OCCViewer_Init"(byval hwnd0 as long ptr, byval hwnd1 as long ptr) As long 
-  Declare Function OCCViewer_Add  Cdecl Alias "OCCViewer_Add" (byval figura as long ptr, modo as long) As long
+  Declare Function OCCViewer_Init Cdecl Alias "OCCViewer_Init"(byval hwnd0 as long,byval context as long ptr,byval views as long ptr) As long 
+  Declare Function OCCViewer_Add  Cdecl Alias "OCCViewer_Add"(byval figura as long, modo as long) As long
+  Declare Function OCCViewer_Update Cdecl Alias "OCCViewer_Update"(byval modo as long=0,byval mx as long=0,byval my as long=0,byval v1 as long=0,byval v2 as long=0,byval modo as long=0) As long
+
+'----------------------------------------
+' Viewer Events (raton y vistas) (jepalza)
+  Declare Function FLUSHView_Init Cdecl Alias "FLUSHView_Init"() As AISViewController 
+  Declare Function FLUSHView_Free  Cdecl Alias "FLUSHView_Free"(byval viewevents as AISViewController) As long
+  Declare Function FLUSHView_Update Cdecl Alias "FLUSHView_Update"(byval viewevents as AISViewController,byval context as long ptr,byval views as long ptr) As long
 
 
 ' ---------------------------------------
