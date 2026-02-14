@@ -1,0 +1,64 @@
+// retocado a mano por Jepalza
+#include ".\Res\Res.bi"
+
+//LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+LANGUAGE LANG_SPANISH, SUBLANG_SPANISH
+
+IDC_MAINICON ICON DISCARDABLE ".\Res\icon_occ.ico"
+
+ID_TOOLBAR_LARGA BITMAP ".\Res\menu_bar_larga.bmp"
+
+IDR_MENUS MENU
+LANGUAGE LANG_SPANISH, SUBLANG_SPANISH
+BEGIN
+  POPUP "&Fichero"
+  BEGIN
+    MENUITEM "&Nuevo",  32776
+    MENUITEM "&Abrir",  32777
+    MENUITEM "&Salvar",  32778
+    MENUITEM "Salvar Como",  32779
+    MENUITEM SEPARATOR
+    POPUP "Exportar"
+    BEGIN
+      MENUITEM "uno",  32794
+      MENUITEM "dos",  32795
+      MENUITEM "tres",  32796
+      MENUITEM "cuatro",  32800
+      MENUITEM SEPARATOR
+      MENUITEM "separado del resto",  32797
+      MENUITEM SEPARATOR
+      MENUITEM "IGES",  IDM_IGS
+      MENUITEM "STEP",  IDM_STP
+    END
+	 MENUITEM SEPARATOR
+	 MENUITEM "&Salir",  IDM_SALIR
+  END
+  POPUP "&Otro Menu"
+  BEGIN
+    MENUITEM "Deshacer(&D)",  32965
+    MENUITEM "ReHacer(&R)",  32966
+    MENUITEM SEPARATOR
+    MENUITEM "Seleccionar todo(&S)",  32839
+    MENUITEM "Invertir Seleccion",  32967
+	 MENUITEM SEPARATOR
+    MENUITEM "Acerca De...",  IDD_ABOUT
+  END
+END
+
+
+// ejemplo de ventana ABOUT creada como DIALOG (nota: DIALOG esta descatalagado, ahora se debe usar DIALOGEX)
+// nameID DIALOGEX x, y, width, height [ , helpID] [optional-statements]  BEGIN control-statements END
+IDD_ABOUT DIALOGEX 100, 100, 212, 68
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Acerca De..."
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+FONT 10, "MS Shell Dlg"
+BEGIN
+	DEFPUSHBUTTON "Entendido", IDOK, 155, 47, 50, 14
+	//CONTROL "Entendido", 1, BUTTON, BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP, 155, 47, 50, 14 
+	CONTROL 128, -1, STATIC, SS_ICON | WS_CHILD | WS_VISIBLE, 7, 7, 21, 20 
+	CONTROL "", -1, STATIC, SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 7, 15, 167, 8 
+	CONTROL "OpenCascade Wrapper para FreeBasic", -1, STATIC, SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 7, 15, 135, 8 
+	CONTROL "Version V7.7    https://dev.opencascade.org/", 1332, STATIC, SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 7, 29, 250, 12 
+	CONTROL "Licencia libre, Joseba Epalza <jepalza> 2026", 1451, STATIC, SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 7, 44, 133, 8 
+END
