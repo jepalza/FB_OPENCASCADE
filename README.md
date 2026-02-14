@@ -17,10 +17,6 @@ Starting from those already prepared by Marcus Wu ‘marcuswu’
 from < https://github.com/marcuswu/occwrapper > with several modifications.
 
 .
-
-Still in the early stages, only three types of entities and two file output formats have been tested.
-
-.
 In this initial version V0.3:
 Top menus and graphic icons have been added. For now, only the “export” menus as IGES and STEP are functional.
 The graphic icons have not yet been implemented.
