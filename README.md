@@ -16,12 +16,13 @@ Starting from those already prepared by Marcus Wu ‘marcuswu’
 
 from < https://github.com/marcuswu/occwrapper > with several modifications.
 
-.
+
 In this initial version V0.3:
 Top menus and graphic icons have been added. For now, only the “export” menus as IGES and STEP are functional.
 The graphic icons have not yet been implemented.
 The control of the graphic window has been improved, now allowing it to be managed from FreeBasic.
-.
+For control viewer, use CONTROL Key and mouse buttons.
+
 
 using the example from < https://github.com/gkv311/occt-hello > with a lot of modifications so that
 
@@ -90,6 +91,7 @@ En esta version incial V0.3:
 Añadidos menus superiores e iconos graficos, por ahora solo funcionales los menus de "exportar" como IGES y STEP
 los iconos graficos aun no estan implementados
 se ha mejorado el control de la ventana grafica, permitiendo ahora su manejo desde FreeBasic
+Para controlar el visualizador, emplear la tecla CONTROL y el Raton.
 
 .
 
