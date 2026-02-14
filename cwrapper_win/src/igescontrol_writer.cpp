@@ -20,7 +20,7 @@ void IGESControlWriter_Add(IGESControlWriter writer, TopoDSShape shape, IGESCont
 	IGESControl_Writer *w = (IGESControl_Writer *) writer;
 	TopoDS_Shape *s = (TopoDS_Shape *) shape;
 	// variable 'mode' no empleada de momento, para el futuro
-	printf("%d\n",mode);
+	// printf("%d\n",mode);
 	w->AddShape(*s);
 }
 

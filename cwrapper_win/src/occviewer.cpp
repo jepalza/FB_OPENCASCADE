@@ -52,23 +52,28 @@ public:
     aViewer->SetDefaultLights();
     aViewer->SetLightOn();
 
+
+	// ventana segun propiedades creadas en FreeBasic
+    ::SetWindowLongPtrW ((HWND)FreeBasicWin, GWLP_USERDATA, (LONG_PTR )this);
+	aWindow = new WNT_Window(FreeBasicWin);
+	// aWindow->SetPos(40,40,400,400); // no hace nada? 
+
     // view setup
     myView = new V3d_View (aViewer);
-
-    ::SetWindowLongPtrW ((HWND)FreeBasicWin, GWLP_USERDATA, (LONG_PTR )this);
-
-	aWindow = new WNT_Window(FreeBasicWin);
     myView->SetWindow (aWindow);
     myView->SetBackgroundColor (Quantity_NOC_GRAY50);
     myView->TriedronDisplay (Aspect_TOTP_LEFT_LOWER, Quantity_NOC_WHITE, 0.1);
     myView->ChangeRenderingParams().RenderResolutionScale = 2.0f;
+	 
 
     // interactive context and demo scene
     myContext = new AIS_InteractiveContext (aViewer);
 
-	 // actualiza vista
+	 // abre la ventana
     aWindow->Map();
+	 // actualiza vista
     myView->Redraw();
+
   }
 
   //! Return context.
@@ -188,44 +193,53 @@ int OCCViewer_Add(TopoDS_Shape aisShape, int mode)
 // eventos graficos: modo=0 solo movimientos, modo=1(defecto) refresca pantalla, modo=2 cambia medidas de pantalla
 int OCCViewer_Update(int modo=1, int mx=0, int my=0, int v1=0, int v2=0, int mb=0)
 {
-		//myViewGlobal->StartRotation(mx, my); // punto de rotacion
-		// control de eventos de raton
-		if(mb==11) // boton izquierdo, rotaciones
-		{
-			myViewGlobal->StartRotation(mx, my); // punto de rotacion en coordenadas del raton
-			myViewGlobal->Rotation(v1,v2);
-		}
-		
-		if(mb==21) // boton derecho translaciones
-		{
-			//myViewGlobal->Place (0, 0, 1); // desde el centro (por ahora)
-			myViewGlobal->Translate(v1,v2,0); // x,y,z=0
-		}
-		
-		if(mb==31) // boton medio lupas
-		{
-			// myViewGlobal->Scale(v1,v2,0); // x,y,z=0
-			myViewGlobal->Zoom(mx,my,v1,v2); 
-		}
+	if(mb==1) // boton izquierdo, sin tecla control, saleccionar objeto
+	{	
+		// seleccionar un objeto en la posicion que hacemos pulsacion del raton
+		myContextGlobal->Activate(0); // Activate shape selection mode (mode 0)
+		myContextGlobal->MoveTo (mx, my, myViewGlobal, false);
+		// myContextGlobal->Select(mx,my,mx+v1,my+v2,myViewGlobal,true); // Rectangle selection
+		myContextGlobal->Select(true); // Click selection
+	}
+
+	//myViewGlobal->StartRotation(mx, my); // punto de rotacion
+	// control de eventos de raton
+	if(mb==2) // boton izquierdo, rotaciones
+	{
+		myViewGlobal->StartRotation(0, 0); // punto de rotacion en el centro de la ventana
+		myViewGlobal->Rotation(v1,v2);
+	}
+	
+	if(mb==3) // boton derecho translaciones
+	{
+		//myViewGlobal->Place (0, 0, 1); // desde el centro (por ahora)
+		myViewGlobal->Translate(v1,v2,0); // x,y,z=0
+	}
+	
+	if(mb==4) // boton medio lupas
+	{
+		// myViewGlobal->Scale(v1,v2,0); // x,y,z=0
+		myViewGlobal->Zoom(mx,my,v1,v2); 
+	}
 
 // gp_Trsf translationTransform;
 // translationTransform.SetTranslation(gp_Vec(dx, dy, dz));
 // myContextGlobal->SetLocation(aisShape, TopLoc_Location(translationTransform));
 
 
-		// en caso de evento RESIZE desde windows
-		if (modo==2)
-		{
-			  myViewGlobal->Window()->DoResize();
-			  myViewGlobal->MustBeResized();
-			  myViewGlobal->InvalidateImmediate();
-		}
-		
-		// actualiza pantalla solo si se indica
-	  if (modo==1) myViewGlobal->FitAll (0.01, false);
-	  
-	  // por defecto redibuja
-     myViewGlobal->Redraw();
+	// en caso de evento RESIZE desde windows
+	if (modo==2)
+	{
+		  myViewGlobal->Window()->DoResize();
+		  myViewGlobal->MustBeResized();
+		  myViewGlobal->InvalidateImmediate();
+	}
+	
+	// actualiza pantalla solo si se indica
+	if (modo==1) myViewGlobal->FitAll (0.01, false);
+	
+	// por defecto redibuja
+   myViewGlobal->Redraw();
 	  
 	return 1; // correcto
 }
