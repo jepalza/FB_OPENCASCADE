@@ -1,7 +1,8 @@
 
+md .\obj
 del /s *.o
-
-del ..\FBOCC_WIN\FBOCCWrapper.dll
+del .\obj\occviewer.o
+del ..\FB_OCC\FBOCCWrapper.dll
 del _resultado.txt
 
 set OPTS= -std=c++11 -O3 -w  -D_WIN32 -fpermissive
@@ -40,7 +41,7 @@ G++ %OPTS% %DIRINC% -c src\gp_vec.cpp                 -o .\obj\gp_vec.o         
 G++ %OPTS% %DIRINC% -c src\occutils.cpp               -o .\obj\occutils.o              2>>_resultado.txt
 G++ %OPTS% %DIRINC% -c src\stepcontrol_writer.cpp     -o .\obj\stepcontrol_writer.o    2>>_resultado.txt
 G++ %OPTS% %DIRINC% -c src\stlapi_writer.cpp          -o .\obj\stlapi_writer.o         2>>_resultado.txt
-G++ %OPTS% %DIRINC% -c src\igescontrol_writer.cpp     -o .\obj\igescontrol_writer.o    2>>_resultado.txt
+G++ %OPTS% %DIRINC% -c src\igescontrol_writer.cpp          -o .\obj\igescontrol_writer.o         2>>_resultado.txt
 G++ %OPTS% %DIRINC% -c src\topexp_explorer.cpp        -o .\obj\topexp_explorer.o       2>>_resultado.txt
 G++ %OPTS% %DIRINC% -c src\toploc_location.cpp        -o .\obj\toploc_location.o       2>>_resultado.txt
 G++ %OPTS% %DIRINC% -c src\topods_compound.cpp        -o .\obj\topods_compound.o       2>>_resultado.txt
@@ -85,5 +86,5 @@ G++ ^
   .\obj\toptools_listofshape.o ^
   %DIRLIB% ^
   %LIBS% ^
-  -o ..\FBOCC_WIN\FBOCCWrapper.dll -shared ^
+  -o ..\FB_OCC\FBOCCWrapper.dll -shared ^
      2>>_resultado.txt
