@@ -68,23 +68,18 @@ Translated with DeepL.com (free version)
 .
 
 Español
-
 .
 
 Freebasic para la integracion de OPENCASCADE "OCC" CAD
-
 .
 
 C-WRAPPER de las librerias OpenCascade < https://dev.opencascade.org > version 7.7
-
 .
 
 Partiendo de las ya preparadas por Marcus Wu 'marcuswu'
-
 .
 
 de la pagina < https://github.com/marcuswu/occwrapper > con varias modificaciones.
-
 .
 
 En esta version incial V0.3:
@@ -92,23 +87,19 @@ Añadidos menus superiores e iconos graficos, por ahora solo funcionales los men
 los iconos graficos aun no estan implementados
 se ha mejorado el control de la ventana grafica, permitiendo ahora su manejo desde FreeBasic
 Para controlar el visualizador, emplear la tecla CONTROL y el Raton.
-
 .
 
 usando partes del visualizador de ejemplo < https://github.com/gkv311/occt-hello > con muchas modificaciones para
 
 emplearlo desde FreeBasic.
-
 .
 
 Para poder compilar la DLL y ejecutar en FreeBasic, se necesita tener instalado OPENCASCADE V7.7
-
 .
 
 En el ejemplo sencillo de FreeBasic, se crean automaticamente 3 entidades: cubo, caja girada y esfera
 
 y para la salida de datos STEP e IGES se crea una entidad Booleana al cortar el cubo con la esfera y la caja.
-
 .
 
 Pueden ser necesarias las librerias propias de MINGW para ejecutar el codigo compilado en FB:
