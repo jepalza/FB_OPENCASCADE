@@ -6,44 +6,212 @@ LANGUAGE LANG_SPANISH, SUBLANG_SPANISH
 
 IDC_MAINICON ICON DISCARDABLE ".\Res\icon_occ.ico"
 
-ID_TOOLBAR_LARGA BITMAP ".\Res\menu_bar_larga.bmp"
+ID_MENUICONOS BITMAP ".\Res\menubar.bmp"
 
 IDR_MENUS MENU
-LANGUAGE LANG_SPANISH, SUBLANG_SPANISH
 BEGIN
   POPUP "&Fichero"
   BEGIN
     MENUITEM "&Nuevo",  32776
     MENUITEM "&Abrir",  32777
-    MENUITEM "&Salvar",  32778
-    MENUITEM "Salvar Como",  32779
+    MENUITEM "&Guardar",  32778
+    MENUITEM "Guardar Como",  32779
     MENUITEM SEPARATOR
+    POPUP "Importar"
+    BEGIN
+      MENUITEM "STEP",  32795
+      MENUITEM "IGES",  32796
+      MENUITEM "DXF",   32800
+		MENUITEM SEPARATOR
+      MENUITEM "STL",  32797
+      MENUITEM "OBJ",  32798
+      MENUITEM "3DS",  32799
+      MENUITEM "3D DXF",  32801
+    END
     POPUP "Exportar"
     BEGIN
-      MENUITEM "uno",  32794
-      MENUITEM "dos",  32795
-      MENUITEM "tres",  32796
-      MENUITEM "cuatro",  32800
-      MENUITEM SEPARATOR
-      MENUITEM "separado del resto",  32797
-      MENUITEM SEPARATOR
       MENUITEM "IGES",  IDM_IGS
       MENUITEM "STEP",  IDM_STP
+		MENUITEM SEPARATOR
+      MENUITEM "STL",  32806
+      MENUITEM "OBJ",  32807
+      MENUITEM "3D DXF",  32808
     END
 	 MENUITEM SEPARATOR
 	 MENUITEM "&Salir",  IDM_SALIR
   END
-  POPUP "&Otro Menu"
+  POPUP "&Editar"
   BEGIN
-    MENUITEM "Deshacer(&D)",  32965
-    MENUITEM "ReHacer(&R)",  32966
+    MENUITEM "Deshacer (&D)",  32965
+    MENUITEM "Rehacer  (&R)",  32966
     MENUITEM SEPARATOR
-    MENUITEM "Seleccionar todo(&S)",  32839
+    MENUITEM "Seleccionar Todo(&T)",  32839
     MENUITEM "Invertir Seleccion",  32967
-	 MENUITEM SEPARATOR
-    MENUITEM "Acerca De...",  IDD_ABOUT
+    MENUITEM "Quitar seleccion",  32840
+  END
+  POPUP "&Vistas"
+  BEGIN
+    MENUITEM "Redibujar",  32841
+    MENUITEM "Mover",  32842
+    MENUITEM "Girar",  32843
+    MENUITEM SEPARATOR
+    MENUITEM "Lupa Ventana",  32813
+    MENUITEM "Lupa Dinamica",  32814
+    MENUITEM "Lupa Total",  32815
+    MENUITEM SEPARATOR
+    POPUP "Vistas 3D"
+    BEGIN
+      MENUITEM "Arriba",  32817
+      MENUITEM "Abajo",  32818
+      MENUITEM "Izquierda",  32975
+      MENUITEM "Derecha",  32976
+      MENUITEM "Frente",  32977
+      MENUITEM "Detras",  32978
+      MENUITEM SEPARATOR
+      MENUITEM "ISO 1",  32979
+      MENUITEM "ISO 2",  32980
+      MENUITEM "ISO 3",  32981
+      MENUITEM "ISO 4",  32982
+    END
+    POPUP "Eje"
+    BEGIN
+      MENUITEM "Ver Eje SI",  32984,  CHECKED
+      MENUITEM "Ver Eje NO",  32985
+    END
+    POPUP "ORTO"
+    BEGIN
+      MENUITEM "ORTO SI",  32987
+      MENUITEM "ORTO NO",  32988,  CHECKED
+      MENUITEM "ORTO Giro",  32989
+    END
+    POPUP "Suavizado"
+    BEGIN
+      MENUITEM "Suavizado SI",  33021
+      MENUITEM "Suavizado NO",  33022,  CHECKED
+    END
+    MENUITEM SEPARATOR
+    MENUITEM "Sombras",  32990
+    MENUITEM "Alambre",  32991
+    MENUITEM "Textura",  33080
+    POPUP "Ocultar"
+    BEGIN
+      MENUITEM "Ocultar SI",  32993
+      MENUITEM "Ocultar NO",  32994,  CHECKED
+    END
+    MENUITEM "Color de Fondo",  32997
+    MENUITEM "Color de Imagen",  32998
+  END
+  POPUP "&Dibujar"
+  BEGIN
+    MENUITEM "Linea",  32888
+    MENUITEM "Rectangulo",  32889
+    MENUITEM "Polilinea",  32890
+    MENUITEM SEPARATOR
+    MENUITEM "Arco",  32891
+    MENUITEM "Arco 3P",  32892
+    MENUITEM "Circulo",  32893
+    MENUITEM "Circulo 3P",  32894
+    MENUITEM "BSPline",  32895
+    MENUITEM "Elipse",  32896
+    MENUITEM "Elipse Arco",  32897
+    MENUITEM SEPARATOR
+    MENUITEM "Punto",  32898
+    MENUITEM "Texto",  32899
+    MENUITEM "Superficie",  32900
+    MENUITEM "Imagen",  32901
+    MENUITEM SEPARATOR
+    POPUP "Solidos 3D"
+    BEGIN
+      MENUITEM "Caja",  32903
+      MENUITEM "Cilindro",  32904
+      MENUITEM "Esfera",  32905
+      MENUITEM "Cono",  32907
+      MENUITEM "Toroide",  32908
+      MENUITEM "Rampa",  32909
+    END
+    MENUITEM SEPARATOR
+    MENUITEM "Prisma",  32911
+    MENUITEM "Tubo",  32912
+    MENUITEM "Revolucion",  32913
+    MENUITEM "Seccion",  32914
+  END
+  POPUP "&Modificar"
+  BEGIN
+    MENUITEM "Borrar",  32999
+    MENUITEM "Copiar",  32916
+    MENUITEM "Espejo",  32918
+    MENUITEM "Espejo por plano",  32919
+    MENUITEM "Espesor",  32921
+    MENUITEM "Mover",  32922
+    MENUITEM "Rotar",  32923
+    MENUITEM SEPARATOR
+    MENUITEM "Escalar",  32924
+    MENUITEM "Explotar",  32925
+    MENUITEM "Arista",  32926
+    MENUITEM "Redondeo",  32927
+    MENUITEM "Romper",  32928
+    MENUITEM "Extender",  32929
+    MENUITEM "Unir",  33012
+    MENUITEM "Dividir",  33039
+    MENUITEM SEPARATOR
+    MENUITEM "Cambiar Color",  32930
+    MENUITEM "Matriz",  32931
+    MENUITEM "Arista 3D Polilinea",  32932
+    MENUITEM SEPARATOR
+    POPUP "Operacion Booleana"
+    BEGIN
+      MENUITEM "Union",  32934
+      MENUITEM "Interseccion",  32935
+      MENUITEM "Subtraccion",  32937
+    END
+    POPUP "Superficies"
+    BEGIN
+      MENUITEM "Copiar",  32939
+      MENUITEM "Borrar",  32940
+      MENUITEM "Extrusionar",  32941
+      MENUITEM "Extrusionar ruta",  32942
+    END
+    MENUITEM "Grosor Solido 3D ",  33001
+    MENUITEM "Transparente",  32945
+  END
+  POPUP "&Insertar"
+  BEGIN
+    MENUITEM "Bloque",  32948
+    MENUITEM SEPARATOR
+    MENUITEM "Imagen",  32949
+  END
+  POPUP "&Utiles"
+  BEGIN
+    MENUITEM "Longitud",  32954
+    MENUITEM "Area",  32955
+    MENUITEM "Volumen",  32956
+    MENUITEM SEPARATOR
+    MENUITEM "Textura a Forma",  32958
+    MENUITEM "Projectar solido 3D a 2D",  32959
+    MENUITEM "Interseccion alambre/figura",  33002
+    MENUITEM "Seccion de solido 3D",  32961
+    MENUITEM "Ver ID de la entidad",  33082
+  END
+  POPUP "&Ayuda"
+  BEGIN
+    MENUITEM "Ayuda ...",  33062
+    MENUITEM SEPARATOR
+    MENUITEM "DEMO Booleanas",  IDD_BOOLDEMO
+    MENUITEM "DEMO ....",  33079
+    MENUITEM "DEMO ....",  33081
+    MENUITEM SEPARATOR
+    MENUITEM "Acerca de ...",  IDD_ABOUT
   END
 END
+
+
+
+
+
+
+
+
+
 
 
 // ejemplo de ventana ABOUT creada como DIALOG (nota: DIALOG esta descatalagado, ahora se debe usar DIALOGEX)
