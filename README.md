@@ -4,7 +4,7 @@
 ![opencascade1](https://github.com/jepalza/FB_OPENCASCADE/blob/main/imagen/visualizador.png)
 
 
-Freebasic for OPENCASCADE “OCC” CAD integration
+Freebasic for OPENCASCADE “OCCT” CAD integration
 .
 
 C-WRAPPER for OpenCascade libraries < https://dev.opencascade.org > version 7.7
@@ -51,7 +51,7 @@ libwinpthread-1.dll
 
 
 -
-The reason for using version OCC7.7 from 2022 on WIN32 is for practical reasons, given that since versions 7.8 there is no longer a Windows installer, and furthermore, there is no longer a project for VC10 and support for X32 has been removed, and I, even in 2026, am still working on x32 and VC10, I can't avoid it....
+The reason for using version OCCT V7.7 from 2022 on WIN32 is for practical reasons, given that since versions 7.8 there is no longer a Windows installer, and furthermore, there is no longer a project for VC10 and support for X32 has been removed, and I, even in 2026, am still working on x32 and VC10, I can't avoid it....
 -
 
 
@@ -70,7 +70,7 @@ Translated with DeepL.com (free version)
 Español
 .
 
-Freebasic para la integracion de OPENCASCADE "OCC" CAD
+Freebasic para la integracion de OPENCASCADE "OCCT" CAD
 .
 
 C-WRAPPER de las librerias OpenCascade < https://dev.opencascade.org > version 7.7
@@ -111,5 +111,5 @@ libstdc++-6.dll
 libwinpthread-1.dll
 
 -
-El motivo de emplear la version OCC7.7 de 2022 en WIN32 es por razones practicas, dado que desde las versiones 7.8 ya no existe instalador windows, y ademas, ya no hay proyecto para VC10 y el soporte para X32 se ha eliminado, y yo aun, en 2026, sigo trabajando en x32 y en VC10, no puedo evitarlo....
+El motivo de emplear la version OCCT V7.7 de 2022 en WIN32 es por razones practicas, dado que desde las versiones 7.8 ya no existe instalador windows, y ademas, ya no hay proyecto para VC10 y el soporte para X32 se ha eliminado, y yo aun, en 2026, sigo trabajando en x32 y en VC10, no puedo evitarlo....
 -
