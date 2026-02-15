@@ -17,8 +17,7 @@
 #include "FBOCCWrapper.bi"
 #Inclib "FBOCCWrapper"
 
-' objetos globales para multitarea
-dim shared as TopoDSShape bolaShape,cuboShape,cajaShape,resultadoBOOLEAN
+' objetos globales para multitarea (sin funcion por ahora, se conservan por si se emplean en un futuro)
 Dim shared As long ctx,vwr ' valores devueltos por OCC de sus manejadores de ventanas (context y viewer)
 									' 		nota: ctx y vwr SIN utilidad actual, para el futuro
 
@@ -27,7 +26,7 @@ Dim shared As long ctx,vwr ' valores devueltos por OCC de sus manejadores de ven
 Dim Shared WinFRM As HWND ' la ventana principal de menus y que contiene a la de OCC
 Dim Shared OCCWin As HWND ' la ventana de OCC
 Dim Shared hWndAbout As HWND
-'Dim Shared hWndMain  As HWND
+
 
 ' instancia global para menus y ventanas "hijo"
 Dim Shared hinst_  As HINSTANCE
@@ -39,16 +38,17 @@ dim shared as integer OCC_Activo=0
 #Include Once "win/commdlg.bi"
 #Include Once "win/commctrl.bi"
 Dim Shared As HWND hWndToolBar 
-Dim Shared As integer altoiconos=16  ' medidas iconos graficos de menus
-Dim Shared As integer anchoiconos=17 ' este 17 es por un ejemplo empleado, pero siempre es mejor cuadrado
-Dim Shared As Integer numbotones=9   ' numero de botones graficos a mostrar
+Dim Shared As integer altoiconos=24  ' medidas iconos graficos de menus
+Dim Shared As integer anchoiconos=24 
+Dim Shared As Integer numbotones=45   ' numero de botones graficos a mostrar (0 a 44)
 
 
 	
 
-' ventana
-dim Shared as long winAncho=800
-dim Shared as long winAlto=600
+' ventana principal
+dim Shared as long winAncho
+	winAncho=numbotones*(anchoiconos+8)-25 ' autoajuste al numero de iconos deseado
+dim Shared as long winAlto=900
 
 ' raton
 dim shared as integer mx,my,v1,v2,mxold,myold,mb
@@ -58,7 +58,47 @@ dim shared as integer CTRL_Pulsado=0
 
 
 
+'''''''''''''''''''''''''''''
+'      elegir ficheros      '
+'''''''''''''''''''''''''''''
+Function ControlArchivos(ByVal HWndFile as HWND ) as String
+    Dim ofn as OPENFILENAME
+    Dim filename as ZString * MAX_PATH+1
+    
+    With ofn
+        .lStructSize         = SizeOf( OPENFILENAME )
+        .hwndOwner           = HWndFile
+        .hInstance           = GetModuleHandle( Null )
+        .lpstrFilter         = StrPtr(!"Todos los ficheros, (*.*)\0*.*" ) '\0*.*\0Bas Files, (*.BAS)\0*.bas\0\0" )
+        .lpstrCustomFilter   = Null
+        .nMaxCustFilter      = 0
+        .nFilterIndex        = 1
+        .lpstrFile           = @filename
+        .nMaxFile            = SizeOf( filename )
+        .lpstrFileTitle      = Null
+        .nMaxFileTitle       = 0
+        .lpstrInitialDir     = Null
+        .lpstrTitle          = @"Selecciona fichero"
+        .Flags               = OFN_EXPLORER 'Or OFN_FILEMUSTEXIST Or OFN_PATHMUSTEXIST
+        .nFileOffset         = 0
+        .nFileExtension      = 0
+        .lpstrDefExt         = Null
+        .lCustData           = 0
+        .lpfnHook            = Null
+        .lpTemplateName      = Null
+    End With
 
+    If( GetOpenFileName( @ofn ) = False ) Then Return ""
+	
+    Return filename
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+' demostracion de uso de booleanas para cortar un cubo con una esfera y un prisma
+dim shared as TopoDSShape bolaShape,cuboShape,cajaShape,resultadoBOOLEAN ' por ahora son globales
 sub Demo()
 	' ESFERA
 	dim as BRepPrimAPIMakeSphere bola
@@ -125,57 +165,18 @@ sub Demo()
 	transformacion=BRepBuilderAPITransform_InitWithShapeTrsf(cajaShape,gpTrsf0)
 	cajaShape=BRepBuilderAPITransform_Shape(transformacion)
 
+	' se envian al visualizador las figuras ya creadas
 		OCCViewer_Add(cast(long ,bolaShape),0)
 		OCCViewer_Add(cast(long ,cuboShape),0)
 		OCCViewer_Add(cast(long ,cajaShape),0)
 		OCCViewer_Add(cast(long ,resultadoBOOLEAN),0)
 end sub
 
-
-
-'''''''''''''''''''''''''''''
-'      elegir ficheros      '
-'''''''''''''''''''''''''''''
-Function ControlArchivos(ByVal HWndFile as HWND ) as String
-    Dim ofn as OPENFILENAME
-    Dim filename as ZString * MAX_PATH+1
-    
-    With ofn
-        .lStructSize         = SizeOf( OPENFILENAME )
-        .hwndOwner           = HWndFile
-        .hInstance           = GetModuleHandle( Null )
-        .lpstrFilter         = StrPtr(!"Todos los ficheros, (*.*)\0*.*" ) '\0*.*\0Bas Files, (*.BAS)\0*.bas\0\0" )
-        .lpstrCustomFilter   = Null
-        .nMaxCustFilter      = 0
-        .nFilterIndex        = 1
-        .lpstrFile           = @filename
-        .nMaxFile            = SizeOf( filename )
-        .lpstrFileTitle      = Null
-        .nMaxFileTitle       = 0
-        .lpstrInitialDir     = Null
-        .lpstrTitle          = @"Selecciona fichero"
-        .Flags               = OFN_EXPLORER 'Or OFN_FILEMUSTEXIST Or OFN_PATHMUSTEXIST
-        .nFileOffset         = 0
-        .nFileExtension      = 0
-        .lpstrDefExt         = Null
-        .lCustData           = 0
-        .lpfnHook            = Null
-        .lpTemplateName      = Null
-    End With
-
-    If( GetOpenFileName( @ofn ) = False ) Then Return ""
-	
-    Return filename
-End Function
-'''''''''''''''''''''''''''''''''''''''''''''''''
-'''''''''''''''''''''''''''''''''''''''''''''''''
-
-
-
 Sub exportar_cad(LW as integer)
 	if LW=IDM_STP then
 		' exportar STEP
 		Dim As String fich=ControlArchivos(WinFRM)
+		If fich="" then exit sub
 		dim as STEPControlWriter FileSTEP=STEPControlWriter_Init()
 		STEPControlWriter_Add(FileSTEP,resultadoBOOLEAN,0)
 		STEPControlWriter_Add(FileSTEP,bolaShape,0)
@@ -189,6 +190,7 @@ Sub exportar_cad(LW as integer)
 		' exportar IGES
 		Dim As String fich=ControlArchivos(WinFRM)
 		dim as IGESControlWriter FileIGES=IGESControlWriter_Init()
+		If fich="" then exit sub
 		IGESControlWriter_Add(FileIGES,resultadoBOOLEAN,0)
 		IGESControlWriter_Add(FileIGES,bolaShape,0)
 		IGESControlWriter_Add(FileIGES,cuboShape,0)
@@ -198,6 +200,7 @@ Sub exportar_cad(LW as integer)
 		print "IGES Correcto!"
 	EndIf
 end sub
+
 
 
 
@@ -217,6 +220,8 @@ End Function
 
 
 
+
+
 Function WndProc cdecl(ByVal hwnd_ As HWND, _
                  ByVal msg_ As UINT, _
                  ByVal wParam_ As WPARAM, _
@@ -225,7 +230,8 @@ Function WndProc cdecl(ByVal hwnd_ As HWND, _
 	
 	Select Case msg_
 		Case WM_CREATE
-         hWndToolBar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, WS_CHILD Or WS_VISIBLE, 0, 0, 8, 0,_
+         hWndToolBar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, WS_CHILD Or WS_VISIBLE or TBSTYLE_TRANSPARENT or TBSTYLE_WRAPABLE , _
+													NULL, NULL, NULL, NULL, _ ' medidas (x,y,ancho,alto) automaticas
 													hWnd_, cast(HMENU,ID_TBR_TOOLBAR), hInst_, NULL) 
          if hWndToolBar=0 Then MessageBox(NULL, "ToolBar 1", "Error", MB_OK Or MB_ICONERROR) : return 0 
 			
@@ -233,14 +239,14 @@ Function WndProc cdecl(ByVal hwnd_ As HWND, _
          SendMessage(hWndToolBar, TB_BUTTONSTRUCTSIZE, cast(WPARAM,sizeof(TBBUTTON)), 0) 
          
 			' espacio para iconos (marco donde se alojara), creo que no es necesario
-			SendMessage(hWndToolBar, TB_SETBITMAPSIZE, cast(WPARAM,0), cast(LPARAM,MAKELONG(anchoiconos, altoiconos))) 
+			'SendMessage(hWndToolBar, TB_SETBITMAPSIZE, cast(WPARAM,0), cast(LPARAM,MAKELONG(anchoiconos, altoiconos))) 
 
 			' para cargar una barra continua de iconos seguidos
 			' importante indicar en 'numbotones' cuantos iconos lleva (misma variable que para crearlos)
-			dim as HIMAGELIST hImgList = ImageList_Create(anchoiconos, altoiconos, ILC_COLOR, numbotones, 0 )
+			dim as HIMAGELIST hImgList = ImageList_Create(anchoiconos, altoiconos, ILC_COLOR32 or ILC_MASK, numbotones, 0 )
 			if (hImgList=0) then MessageBox(NULL, "ToolBar 2", "Error", MB_OK Or MB_ICONERROR) : return 0 
 			dim as HBITMAP hBitmapImage = cast(HBITMAP,LoadImage(hInst_, _
-				 MAKEINTRESOURCE( ID_TOOLBAR_LARGA ), _ ' AQUI EL NOMBRE DEL BMP
+				 MAKEINTRESOURCE( ID_MENUICONOS ), _ ' nombre del BMP desde RESOURCES
 				 IMAGE_BITMAP, numbotones * anchoiconos, altoiconos, _
 				 LR_COPYFROMRESOURCE or LR_SHARED  ))
 			' este sistema pilla un BMP largo con varios iconos seguidos, y los pega automatico todos seguidos
@@ -255,20 +261,55 @@ Function WndProc cdecl(ByVal hwnd_ As HWND, _
 			' definimos el tipo de botones: pueden ser estandar, peques, grandes, tec... ver internes
 			Dim As TBADDBITMAP tbbits 
 			tbbits.hInst= HINST_COMMCTRL 
-			tbbits.nID = IDB_STD_SMALL_COLOR ' IDB_STD_LARGE_COLOR ' para iconos de 24x24
+			tbbits.nID = IDB_STD_LARGE_COLOR 'IDB_STD_SMALL_COLOR ' para iconos de 24x24
 			SendMessage(hWndToolBar,TB_ADDBITMAP, 0, cast(LPARAM,@tbbits)) 'tapar este y el boton cambia forma
 
-			' el boton se redimensiona segun el tamaño del texto a mostrar, en caso de indicarlo
-			' si supera al icono, se agranda
+			' el boton se redimensiona segun el tamaño del texto a mostrar. si supera al icono, se agranda
 			tbb( 0) = type( 0 , ID_BOTON0 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
 			tbb( 1) = type( 1 , ID_BOTON1 , TBSTATE_ENABLED , TBSTYLE_BUTTON) 'pueden ser TBSTYLE_AUTOSIZE
 			tbb( 2) = type( 2 , ID_BOTON2 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
 			tbb( 3) = type( 3 , ID_BOTON3 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
-			tbb( 4) = type( 4 , ID_BOTON3 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
-			tbb( 5) = type( 5 , ID_BOTON3 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
-			tbb( 6) = type( 6 , ID_BOTON3 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
-			tbb( 7) = type( 7 , ID_BOTON3 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
-			tbb( 8) = type( 8 , ID_BOTON3 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 4) = type( 4 , ID_BOTON4 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 5) = type( 5 , ID_BOTON5 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 6) = type( 6 , ID_BOTON6 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 7) = type( 7 , ID_BOTON7 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 8) = type( 8 , ID_BOTON8 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 9) = type( 9 , ID_BOTON9 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 10) = type( 10 , ID_BOTON10 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 11) = type( 11 , ID_BOTON11 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 12) = type( 12 , ID_BOTON12 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 13) = type( 13 , ID_BOTON13 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 14) = type( 14 , ID_BOTON14 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 15) = type( 15 , ID_BOTON15 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 16) = type( 16 , ID_BOTON16 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 17) = type( 17 , ID_BOTON17 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 18) = type( 18 , ID_BOTON18 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 19) = type( 19 , ID_BOTON19 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 20) = type( 20 , ID_BOTON20 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 21) = type( 21 , ID_BOTON21 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 22) = type( 22 , ID_BOTON22 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 23) = type( 23 , ID_BOTON23 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 24) = type( 24 , ID_BOTON24 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 25) = type( 25 , ID_BOTON25 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 26) = type( 26 , ID_BOTON26 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 27) = type( 27 , ID_BOTON27 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 28) = type( 28 , ID_BOTON28 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 29) = type( 29 , ID_BOTON29 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 30) = type( 30 , ID_BOTON30 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 31) = type( 31 , ID_BOTON31 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 32) = type( 32 , ID_BOTON32 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 33) = type( 33 , ID_BOTON33 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 34) = type( 34 , ID_BOTON34 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 35) = type( 35 , ID_BOTON35 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 36) = type( 36 , ID_BOTON36 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 37) = type( 37 , ID_BOTON37 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 38) = type( 38 , ID_BOTON38 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 39) = type( 39 , ID_BOTON39 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 40) = type( 40 , ID_BOTON40 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 41) = type( 41 , ID_BOTON41 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 42) = type( 42 , ID_BOTON42 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 43) = type( 43 , ID_BOTON43 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
+			tbb( 44) = type( 44 , ID_BOTON44 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
 
 			' *****************************************
 			' ya podemos mostrar los botones
@@ -304,6 +345,9 @@ Function WndProc cdecl(ByVal hwnd_ As HWND, _
 			
 			' mensaje IDD_ABOUT
 	      If LW=IDD_ABOUT Then DialogBox(hInst_, MAKEINTRESOURCE(IDD_ABOUT), hWnd_, cast(WNDPROC,@AboutDlgProc))
+			
+			' demos
+	      If LW=IDD_BOOLDEMO Then demo() 
 		' -------------------------------------------
 		
 		
@@ -320,9 +364,9 @@ Function WndProc cdecl(ByVal hwnd_ As HWND, _
 			' para hacer que la secundaria quede dentro del marco sin "pisar" iconos
 			If wParam_ <> SIZE_MINIMIZED Then GetClientRect(hWnd_, @rc)
 			dim as LONG x1 = rc.left +4
-         dim as LONG y1 = rc.top +32 ' este es para no "pisar" los iconos de los menus
+         dim as LONG y1 = rc.top +altoiconos+12
          dim as LONG x2 = rc.right -4-4
-         dim as LONG y2 = rc.bottom -32-4
+         dim as LONG y2 = rc.bottom -altoiconos-12-4
          MoveWindow(OCCWin, x1, y1, x2, y2, TRUE) ' actualizo ventana OCC
 			UpdateWindow(OCCWin)
 			if OCC_Activo then OCCViewer_Update(2) ' =2 refresca la pantalla a las nuevas medidas
@@ -475,12 +519,12 @@ Function WINMAIN (ByVal hInst As HINSTANCE, ByVal hPrevInst As HINSTANCE, _
    ' si usamos RESOURCES para leer la configuracion de la ventana principal, esto no es necesario
 	WinFRM = CreateWindowEx(WS_EX_CONTROLPARENT, _
                         szClassName1,   _
-                        "OpenCASCADE OCC 7.7 FreeBasic", _ ' titulo de la ventana
+                        "OpenCASCADE (OCCT) V7.7 For FreeBasic", _ ' titulo de la ventana
                         WS_OVERLAPPEDWINDOW, _
                         CW_USEDEFAULT, _
                         CW_USEDEFAULT,  _
-                        winAncho+16+4, _ ' +16+4 para que entre el marco
-                        winAlto +64+4, _ ' +64+4 para dejar sitio a menus
+                        winAncho, _ 
+                        winAlto , _ 
                         NULL, _
                         NULL, _
                         hInst, _
@@ -510,9 +554,9 @@ Function WINMAIN (ByVal hInst As HINSTANCE, ByVal hPrevInst As HINSTANCE, _
                         WS_CHILD, _
                         0, _
                         0,  _
-                        winAncho, _ ' se autoajusta en crear el proceso
-                        winAlto, _ ' se autoajusta en crear el proceso
-                        WinFRM, _
+                        winAncho, _ ' se autoajusta en "WndProc" al crear el proceso
+                        winAlto , _ ' se autoajusta en "WndProc" al crear el proceso
+                        WinFRM, _ ' hijo de.... su padre
                         NULL, _
                         null, _
                         ByVal NULL)
@@ -526,9 +570,6 @@ Function WINMAIN (ByVal hInst As HINSTANCE, ByVal hPrevInst As HINSTANCE, _
 	' crea una ventana OCC
 	OCC_Activo=OCCViewer_Init(cast(long,OCCWin),@ctx,@vwr) ' nota: ctx y vwr SIN utilidad actual, para el futuro
 	'print "manejadores OCC:";ctx,vwr
-	
-	' genera una Demostracion de BOOLEANAS
-	Demo()
 		
 	' message loop
 	While GetMessage(@msg_, NULL, 0, 0)

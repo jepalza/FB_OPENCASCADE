@@ -64,7 +64,7 @@
   Type As ULong TopToolsListOfShape
 
 	' Añadidos por 'Joseba Epalza <jepalza>'
-    Type As ULong AISShape ' entidades que se envian al visualizador
+    'Type As ULong AISShape ' entidades que se envian al visualizador
     Type As ULong AISViewController ' manejador de eventos de ventana y raton
 	 Type As ULong BRepPrimAPIMakeSphere 'esferas
 
