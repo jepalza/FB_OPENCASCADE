@@ -23,6 +23,9 @@ The graphic icons have not yet been implemented.
 The control of the graphic window has been improved, now allowing it to be managed from FreeBasic.
 For control viewer, use CONTROL Key and mouse buttons.
 
+Update 21-feb.-2026 to V0.31:
+-repaired FREETYPE libraries error
+-working on more features on viewer, like transforms
 
 using the example from < https://github.com/gkv311/occt-hello > with a lot of modifications so that
 
@@ -87,7 +90,12 @@ Añadidos menus superiores e iconos graficos, por ahora solo funcionales los men
 los iconos graficos aun no estan implementados
 se ha mejorado el control de la ventana grafica, permitiendo ahora su manejo desde FreeBasic
 Para controlar el visualizador, emplear la tecla CONTROL y el Raton.
+
+Actualizacion 21-feb-2026 a V0.31:
+-reparado un error en librerias FREETYPE
+-trabajando en mejorar el visualizador, como añadir transformaciones
 .
+
 
 usando partes del visualizador de ejemplo < https://github.com/gkv311/occt-hello > con muchas modificaciones para
 
