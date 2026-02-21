@@ -8,72 +8,75 @@
 ' empleando las rutinas de < https://github.com/marcuswu/occwrapper > con ligeras modificaciones
 ' licencias de sus respectivos autores, segun se indica en su pagina WEB  
 
-  Type As ULong gcCircle
-  Type As ULong gcSurface
-  Type As ULong gcTrimmedCurve
-  Type As ULong gpAx1
-  Type As ULong gpAx2
-  Type As ULong gpAx3
-  Type As ULong gpCirc
-  Type As ULong gpDir
-  Type As ULong gpPln
-  Type As ULong gpPnt
-  Type As ULong gpQuaternion
-  Type As ULong gpTrsf
-  Type As ULong gpVec
-  Type As ULong BRepAdapterCurve
-  Type As ULong BRepAdapterSurface
-  Type As ULong BRepAlgoAPIBooleanOperation
-  Type As ULong BRepAlgoAPICut
-  Type As ULong BRepAlgoAPIFuse
-  Type As ULong BRepBuilderAPIMakeEdge
-  Type As ULong BRepBuilderAPIMakeWire
-  Type As ULong BRepBuilderAPIMakeFace
-  Type As ULong BRepBuilderAPIMakeShape
-  Type As ULong BRepBuilderAPITransform
-  Type As ULong BRepBuilder
-  Type As ULong BRepFilletAPIMakeChamfer
-  Type As ULong BRepFilletAPIMakeFillet
-  Type As ULong BRepMeshIncrementalMesh
+  Type As Long Ptr gcCircle
+  Type As Long Ptr gcSurface
+  Type As Long Ptr gcTrimmedCurve
+  Type As Long Ptr gpAx1
+  Type As Long Ptr gpAx2
+  Type As Long Ptr gpAx3
+  Type As Long Ptr gpCirc
+  Type As Long Ptr gpDir
+  Type As Long Ptr gpPln
+  Type As Long Ptr gpPnt
+  Type As Long Ptr gpQuaternion
+  Type As Long Ptr gpTrsf
+  Type As Long Ptr gpVec
+  Type As Long Ptr BRepAdapterCurve
+  Type As Long Ptr BRepAdapterSurface
+  Type As Long Ptr BRepAlgoAPIBooleanOperation
+  Type As Long Ptr BRepAlgoAPICut
+  Type As Long Ptr BRepAlgoAPIFuse
+  Type As Long Ptr BRepBuilderAPIMakeEdge
+  Type As Long Ptr BRepBuilderAPIMakeWire
+  Type As Long Ptr BRepBuilderAPIMakeFace
+  Type As Long Ptr BRepBuilderAPIMakeShape
+  Type As Long Ptr BRepBuilderAPITransform
+  Type As Long Ptr BRepBuilder
+  Type As Long Ptr BRepFilletAPIMakeChamfer
+  Type As Long Ptr BRepFilletAPIMakeFillet
+  Type As Long Ptr BRepMeshIncrementalMesh
 
-  Type As ULong BRepPrimAPIMakeBox
-  Type As ULong BRepPrimAPIMakeCylinder
-  Type As ULong BRepPrimAPIMakePrism
-  Type As ULong BRepPrimAPIMakeRevol
-  Type As ULong BRepPrimAPIMakeSphere
+  Type As Long Ptr BRepPrimAPIMakeBox
+  Type As Long Ptr BRepPrimAPIMakeCylinder
+  Type As Long Ptr BRepPrimAPIMakePrism
+  Type As Long Ptr BRepPrimAPIMakeRevol
+  Type As Long Ptr BRepPrimAPIMakeSphere
 
-  Type As ULong GPropGProps
-  Type As ULong GeomAdapterCurve
-  Type As ULong GeomAdapterSurface
-  Type As ULong GeomLPropSLProps
-  Type As ULong GeomCurve
-  Type As ULong ShapeIterator
+  Type As Long Ptr GPropGProps
+  Type As Long Ptr GeomAdapterCurve
+  Type As Long Ptr GeomAdapterSurface
+  Type As Long Ptr GeomLPropSLProps
+  Type As Long Ptr GeomCurve
+  Type As Long Ptr ShapeIterator
 
-  Type As ULong STEPControlWriter
-  Type As ULong IGESControlWriter
-  Type As ULong StlAPIWriter
+  Type As Long Ptr STEPControlWriter
+  Type As Long Ptr IGESControlWriter
+  Type As Long Ptr StlAPIWriter
 
-  Type As ULong TopoDSCompound
-  Type As ULong TopoDSEdge
-  Type As ULong TopoDSWire
-  Type As ULong TopoDSFace
-  Type As ULong TopoDSShape
-  Type As ULong TopoDSVertex
-  Type As ULong TopExpExplorer
-  Type As ULong TopLocLocation
-  Type As ULong TopToolsListOfShape
+  Type As Long Ptr TopoDSCompound
+  Type As Long Ptr TopoDSEdge
+  Type As Long Ptr TopoDSWire
+  Type As Long Ptr TopoDSFace
+  Type As Long Ptr TopoDSShape
+  Type As Long Ptr TopoDSVertex
+  Type As Long Ptr TopExpExplorer
+  Type As Long Ptr TopLocLocation
+  Type As Long Ptr TopToolsListOfShape
 
 	' Añadidos por 'Joseba Epalza <jepalza>'
-    'Type As ULong AISShape ' entidades que se envian al visualizador
-    Type As ULong AISViewController ' manejador de eventos de ventana y raton
-	 Type As ULong BRepPrimAPIMakeSphere 'esferas
+    Type As Long Ptr AISShape ' entidades que se envian al visualizador
+    Type As Long Ptr AISViewController ' manejador de eventos de ventana y raton
+	 Type As Long Ptr BRepPrimAPIMakeSphere 'esferas
 
 
 '----------------------------------------
 ' OCC Viewer (jepalza)
   Declare Function OCCViewer_Init Cdecl Alias "OCCViewer_Init"(byval hwnd0 as long,byval context as long ptr,byval views as long ptr) As long 
-  Declare Function OCCViewer_Add  Cdecl Alias "OCCViewer_Add"(byval figura as long, modo as long) As long
-  Declare Function OCCViewer_Update Cdecl Alias "OCCViewer_Update"(byval modo as long=0,byval mx as long=0,byval my as long=0,byval v1 as long=0,byval v2 as long=0,byval modo as long=0) As long
+  Declare Function OCCViewer_Add  Cdecl Alias "OCCViewer_Add"(byval figura as long, modo as long) As AISShape
+  Declare Function OCCViewer_Update Cdecl Alias "OCCViewer_Update"(byval modo as long=0) As Long
+  Declare Function OCCViewer_Mouse Cdecl Alias "OCCViewer_Mouse"(byval mx as long=0,byval my as long=0,byval v1 as long=0,byval v2 as long=0,byval mb as long=0) As AISShape
+  Declare Function OCCViewer_Mouse3D Cdecl Alias "OCCViewer_Mouse3D"(byval mx as long,byval my as long,byval xp as Double Ptr,byval yp as Double Ptr,byval zp as Double Ptr) As Long
+  Declare Function OCCViewer_Transform Cdecl Alias "OCCViewer_Transform"(MyAISShape As AISShape,ByVal orig As gpPnt,ByVal dest As gpPnt) As AISShape
 
 '----------------------------------------
 ' Viewer Events (raton y vistas) (jepalza)
@@ -114,7 +117,7 @@
   Declare Sub      TopToolsListOfShape_Free Cdecl Alias "TopToolsListOfShape_Free"(ByVal list As TopToolsListOfShape) 
   Declare Function TopToolsListOfShape_Append Cdecl Alias "TopToolsListOfShape_Append"(ByVal list As TopToolsListOfShape ,ByVal shape As TopoDSShape) As TopoDSShape 
   Declare Sub      TopToolsListOfShape_AppendList Cdecl Alias "TopToolsListOfShape_AppendList"(ByVal list As TopToolsListOfShape ,ByVal other As TopToolsListOfShape) 
-  Declare Function TopToolsListOfShape_Extent Cdecl Alias "TopToolsListOfShape_Extent"(ByVal list As TopToolsListOfShape) As Ulong 
+  Declare Function TopToolsListOfShape_Extent Cdecl Alias "TopToolsListOfShape_Extent"(ByVal list As TopToolsListOfShape) As Long Ptr 
   Declare Function TopToolsListOfShape_Begin Cdecl Alias "TopToolsListOfShape_Begin"(ByVal list As TopToolsListOfShape) As ShapeIterator 
 
   Declare Function ShapeIterator_Next Cdecl Alias "ShapeIterator_Next"(ByVal iter As ShapeIterator) As ShapeIterator 
@@ -186,7 +189,7 @@
 
 ' ---------------------------------------
 ' Fichero: brep_adapter.h
-	Type As Ulong GeomAbs_SurfaceType 
+	Type As Long Ptr GeomAbs_SurfaceType 
   Declare Function BRepAdapterCurve_Init Cdecl Alias "BRepAdapterCurve_Init"(ByVal edge As TopoDSEdge) As BRepAdapterCurve 
   Declare Function BRepAdapterCurve_IsLine Cdecl Alias "BRepAdapterCurve_IsLine"(ByVal curve As BRepAdapterCurve) As Boolean 
   Declare Function BRepAdapterCurve_IsCircle Cdecl Alias "BRepAdapterCurve_IsCircle"(ByVal curve As BRepAdapterCurve) As Boolean 
@@ -337,7 +340,7 @@
 ' Fichero: gp_vec.h
   Declare Function gpVec_Init Cdecl Alias "gpVec_Init"(ByVal x As Double ,ByVal y As Double ,ByVal z As Double) As gpVec 
   Declare Function gpVec_InitDir Cdecl Alias "gpVec_InitDir"(ByVal dirs As gpDir) As gpVec 
-  Declare Function gpVec_InitPoints Cdecl Alias "gpVec_InitPoints"(ByVal start As gpPnt ,ByVal end As gpPnt) As gpVec 
+  Declare Function gpVec_InitPoints Cdecl Alias "gpVec_InitPoints"(ByVal ini As gpPnt ,ByVal fin As gpPnt) As gpVec 
   Declare Sub      gpVec_Free Cdecl Alias "gpVec_Free"(ByVal vector As gpVec) 
   Declare Function gpVec_X Cdecl Alias "gpVec_X"(ByVal vec As gpVec) As Double 
   Declare Function gpVec_Y Cdecl Alias "gpVec_Y"(ByVal vec As gpVec) As Double 
@@ -365,17 +368,17 @@
 
 ' ---------------------------------------
 ' Fichero: stepcontrol_writer.h
-   Type As Ulong STEPControlStepModelType 
+   Type As Long Ptr STEPControlStepModelType 
   Declare Function STEPControlWriter_Init  Cdecl Alias "STEPControlWriter_Init"() As STEPControlWriter 
-  Declare Function STEPControlWriter_Add   Cdecl Alias "STEPControlWriter_Transfer"(ByVal writer As STEPControlWriter ,ByVal shape As TopoDSShape ,ByVal types As STEPControlStepModelType) As uLong 
-  Declare Function STEPControlWriter_Write Cdecl Alias "STEPControlWriter_Write"(ByVal writer As STEPControlWriter ,ByVal filename As Zstring Ptr) As Ulong 
+  Declare Function STEPControlWriter_Add   Cdecl Alias "STEPControlWriter_Transfer"(ByVal writer As STEPControlWriter ,ByVal shape As TopoDSShape ,ByVal types As STEPControlStepModelType) As Long Ptr 
+  Declare Function STEPControlWriter_Write Cdecl Alias "STEPControlWriter_Write"(ByVal writer As STEPControlWriter ,ByVal filename As Zstring Ptr) As Long Ptr 
   Declare Sub      STEPControlWriter_Free  Cdecl Alias "STEPControlWriter_Free"(ByVal writer As STEPControlWriter) 
 
 ' Fichero: IGESapi_writer.h
-   Type As Ulong IGESControlIgesModelType 
+   Type As Long Ptr IGESControlIgesModelType 
   Declare Function IGESControlWriter_Init  Cdecl Alias "IGESControlWriter_Init"() As IGESControlWriter 
   Declare sub 		 IGESControlWriter_Add   Cdecl Alias "IGESControlWriter_Add"(ByVal writer As IGESControlWriter ,ByVal shape As TopoDSShape ,ByVal types As IGESControlIgesModelType)
-  Declare Function IGESControlWriter_Write Cdecl Alias "IGESControlWriter_Write"(ByVal writer As IGESControlWriter ,ByVal filename As Zstring Ptr) As ulong 
+  Declare Function IGESControlWriter_Write Cdecl Alias "IGESControlWriter_Write"(ByVal writer As IGESControlWriter ,ByVal filename As Zstring Ptr) As Long Ptr 
   Declare Sub      IGESControlWriter_Free  Cdecl Alias "IGESControlWriter_Free"(ByVal writer As IGESControlWriter) 
 
 ' ---------------------------------------
@@ -386,13 +389,13 @@
 
 ' ---------------------------------------
 ' Fichero: topexp_explorer.h
-   Type As Ulong TopAbsShapeEnum 
+   Type As Long Ptr TopAbsShapeEnum 
   Declare Function TopExpExplorer_Init Cdecl Alias "TopExpExplorer_Init"(ByVal shape As TopoDSShape ,ByVal toFind As TopAbsShapeEnum) As TopExpExplorer 
   Declare Sub      TopExpExplorer_Free Cdecl Alias "TopExpExplorer_Free"(ByVal exp As TopExpExplorer) 
   Declare Function TopExpExplorer_More Cdecl Alias "TopExpExplorer_More"(ByVal exp As TopExpExplorer) As Boolean 
   Declare Sub      TopExpExplorer_Next Cdecl Alias "TopExpExplorer_Next"(ByVal exp As TopExpExplorer) 
   Declare Function TopExpExplorer_Current Cdecl Alias "TopExpExplorer_Current"(ByVal exp As TopExpExplorer) As TopoDSShape 
-  Declare Function TopExpExplorer_Depth Cdecl Alias "TopExpExplorer_Depth"(ByVal exp As TopExpExplorer) As Ulong 
+  Declare Function TopExpExplorer_Depth Cdecl Alias "TopExpExplorer_Depth"(ByVal exp As TopExpExplorer) As Long Ptr 
 
   Declare Function TopExp_FirstVertex Cdecl Alias "TopExp_FirstVertex"(ByVal edge As TopoDSEdge) As TopoDSVertex 
   Declare Function TopExp_LastVertex Cdecl Alias "TopExp_LastVertex"(ByVal edge As TopoDSEdge) As TopoDSVertex 
@@ -412,5 +415,5 @@
   Declare Function TopoDSShape_IsEqual Cdecl Alias "TopoDSShape_IsEqual"(ByVal shape As TopoDSShape ,ByVal other As TopoDSShape) As Boolean 
   Declare Sub      TopoDSShape_Free Cdecl Alias "TopoDSShape_Free"(ByVal shape As TopoDSShape) 
   Declare Function TopoDSShape_Location Cdecl Alias "TopoDSShape_Location"(ByVal shape As TopoDSShape) As TopLocLocation 
-  Declare Function TopoDSShape_Orientation Cdecl Alias "TopoDSShape_Orientation"(ByVal shape As TopoDSShape) As Ulong 
+  Declare Function TopoDSShape_Orientation Cdecl Alias "TopoDSShape_Orientation"(ByVal shape As TopoDSShape) As Long Ptr 
   Declare Function TopoDSShape_Wire Cdecl Alias "TopoDSShape_Wire"(ByVal shape As TopoDSShape) As TopoDSWire 

@@ -99,7 +99,12 @@ End Function
 
 ' demostracion de uso de booleanas para cortar un cubo con una esfera y un prisma
 dim shared as TopoDSShape bolaShape,cuboShape,cajaShape,resultadoBOOLEAN ' por ahora son globales
+dim shared as AISShape bolaAIS,cuboAIS,cajaAIS,resultadoAIS
+dim shared as AISShape figuraseleccionada ' figura global seleccionada al pulsar sobre ella
 sub Demo()
+	' para transformaciones
+	dim as gpTrsf gpTrsf0=gpTrsf_Init()
+		
 	' ESFERA
 	dim as BRepPrimAPIMakeSphere bola
 	dim as gpAx2 bolaAX2=gpAx2_Init( gpPnt_Init(125,0,75) , gpPnt_Init(0,0,1) , gpPnt_Init(1,0,0) )  ' sin giros, direccion X
@@ -119,7 +124,6 @@ sub Demo()
 	dim as gpAx2  cajaAX2=gpAx2_Init( gpPnt_Init(-10,-10,-10) , gpPnt_Init(0,1,0) , gpPnt_Init(0,0,1) ) ' sin giros, direccion Z
 	caja=BRepPrimAPIMakeBox_Init(cajaAX2,50,200,50) ' creo un cuerpo alargado en la pos. -10,-10,-10 SIN giros, solo horizontal
 	dim as gpAx1  giroAX1=gpAx1_Init( gpPnt_Init(-10,-10,-10) , gpPnt_Init(1,0,0)) ' creo un punto de giro -10,-10,-10 en X
-	dim as gpTrsf gpTrsf0=gpTrsf_Init()
 	gpTrsf_SetRotation(gpTrsf0 ,giroAX1,0.707) ' creo una matriz de giro en X45º
 	cajaShape=BRepPrimAPIMakeBox_Shape(caja)
 	dim as BRepBuilderAPITransform transformacion=BRepBuilderAPITransform_InitWithShapeTrsf(cajaShape,gpTrsf0)
@@ -165,11 +169,15 @@ sub Demo()
 	transformacion=BRepBuilderAPITransform_InitWithShapeTrsf(cajaShape,gpTrsf0)
 	cajaShape=BRepBuilderAPITransform_Shape(transformacion)
 
-	' se envian al visualizador las figuras ya creadas
-		OCCViewer_Add(cast(long ,bolaShape),0)
-		OCCViewer_Add(cast(long ,cuboShape),0)
-		OCCViewer_Add(cast(long ,cajaShape),0)
-		OCCViewer_Add(cast(long ,resultadoBOOLEAN),0)
+		' se envian al visualizador las figuras ya creadas
+		' y se devuelve el manejador interactivo empleado (AISShape)
+		bolaAIS = OCCViewer_Add(cast(long ,bolaShape),0)
+		cuboAIS = OCCViewer_Add(cast(long ,cuboShape),0)
+		cajaAIS = OCCViewer_Add(cast(long ,cajaShape),0)
+		resultadoAIS = OCCViewer_Add(cast(long ,resultadoBOOLEAN),0)
+		
+	' libero espacio
+	gpTrsf_Free(gpTrsf0)
 end sub
 
 Sub exportar_cad(LW as integer)
@@ -195,7 +203,7 @@ Sub exportar_cad(LW as integer)
 		IGESControlWriter_Add(FileIGES,bolaShape,0)
 		IGESControlWriter_Add(FileIGES,cuboShape,0)
 		IGESControlWriter_Add(FileIGES,cajaShape,0)
-		IGESControlWriter_Write(FileIGES,strptr(fich))                                                                                                                   
+		IGESControlWriter_Write(FileIGES,strptr(fich)) 
 		IGESControlWriter_Free(FileIGES)	
 		print "IGES Correcto!"
 	EndIf
@@ -264,9 +272,9 @@ Function WndProc cdecl(ByVal hwnd_ As HWND, _
 			tbbits.nID = IDB_STD_LARGE_COLOR 'IDB_STD_SMALL_COLOR ' para iconos de 24x24
 			SendMessage(hWndToolBar,TB_ADDBITMAP, 0, cast(LPARAM,@tbbits)) 'tapar este y el boton cambia forma
 
-			' el boton se redimensiona segun el tamaño del texto a mostrar. si supera al icono, se agranda
+			 'pueden ser TBSTYLE_AUTOSIZE para autoajuste
 			tbb( 0) = type( 0 , ID_BOTON0 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
-			tbb( 1) = type( 1 , ID_BOTON1 , TBSTATE_ENABLED , TBSTYLE_BUTTON) 'pueden ser TBSTYLE_AUTOSIZE
+			tbb( 1) = type( 1 , ID_BOTON1 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
 			tbb( 2) = type( 2 , ID_BOTON2 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
 			tbb( 3) = type( 3 , ID_BOTON3 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
 			tbb( 4) = type( 4 , ID_BOTON4 , TBSTATE_ENABLED , TBSTYLE_BUTTON)
@@ -421,26 +429,44 @@ Function OCCProc cdecl(ByVal hwnd_ As HWND, _
 			myold=my
 			mx=loword(lParam_)
 			my=hiword(lParam_)
+			'dim as TopoDSShape aShape
 			'print mx,my
 			' rotaciones boton medio o rueda
 			if OCC_Activo and mb=31 and CTRL_Pulsado then 
 				if mxold<>mx then v1=(mxold-mx):mxold=mx
 				if myold<>my then v2=(myold-my):myold=my
-				OCCViewer_Update(0,,,-v1,-v2,2) '2=rotar
+				OCCViewer_Mouse(,,-v1,-v2,2) '2=rotar
 			endif
 			' translaciones boton derecho
 			if OCC_Activo and mb=21 and CTRL_Pulsado then 
 				if mxold<>mx then v1=(mxold-mx):mxold=mx
 				if myold<>my then v2=(myold-my):myold=my
-				OCCViewer_Update(0,,,-v1,v2,3) '3=mover
+				OCCViewer_Mouse(,,-v1,v2,3) '3=mover
 			endif
 			' lupas boton izquierdo 
 			if OCC_Activo and mb=11 and CTRL_Pulsado then 
 				if mxold<>mx then v1=(mxold-mx):mxold=mx
 				if myold<>my then v2=(myold-my):myold=my
-				OCCViewer_Update(0,0,0,-v2,v1,4) '4=lupa
+				OCCViewer_Mouse(0,0,-v2,v1,4) '4=lupa
 			endif
 			
+			if mxold<>mx andalso myold<>my andalso mb=10 then 
+				'OCCViewer_Mouse(mx,my,mx+1,my+1,1) '1=seleccion
+				'print "aShape:";aShape
+'				dim as gpTrsf trsf=gpTrsf_Init()
+'				dim as gpPnt oldPnt = gpPnt_Init(0,0,0)
+'				dim as gpPnt newPnt = gpPnt_Init(10, 100, 0)
+'				'gpTrsf_SetTransformation(trsf, oldPnt, newPnt)
+'				dim as gpVec vector_move=gpVec_InitPoints(oldPnt,newPnt)
+'				gpTrsf_SetTranslation(trsf, vector_move)
+
+'				dim as BRepBuilderAPITransform myTrsf
+'				myTrsf=BRepBuilderAPITransform_InitWithShapeTrsf(aShape,trsf)
+'				aShape=BRepBuilderAPITransform_Shape(myTrsf)
+'				OCCViewer_Add(cast(long ,aShape),0)
+'				BRepBuilderAPITransform_Free(myTrsf)
+			endif
+
 		case WM_LBUTTONUP
 			'print "L0"
 			mb=10
@@ -450,7 +476,17 @@ Function OCCProc cdecl(ByVal hwnd_ As HWND, _
 			mb=11
 			' seleccion de objeto al pulsar raton sobre el
 			if OCC_Activo and mb=11 and CTRL_Pulsado=0 then 
-				OCCViewer_Update(0,mx,my,mx+1,my+1,1) '1=seleccion
+				figuraseleccionada=OCCViewer_Mouse(mx,my,mx+1,my+1,1) '1=seleccion
+				print "seleccion:";figuraseleccionada
+				' recupera posicion 3D del raton segun su posicion 2D
+				dim as Double xp,yp,zp
+				OCCViewer_Mouse3D(mx,my,@xp,@yp,@zp)
+				'print "Raton 2D:";mx,my," A 3D:";xp,yp,zp
+				dim as gpPnt orig=gpPnt_Init(xp,yp,zp)
+				dim as gpPnt dest=gpPnt_Init(xp+10,yp+10,zp+10)
+				print "transformacion:"; OCCViewer_Transform(figuraseleccionada,orig,dest)
+				print
+				'bolaAIS = OCCViewer_Add(cast(long ,bolaShape),0)
 			endif
 
 		case WM_RBUTTONUP
@@ -570,6 +606,9 @@ Function WINMAIN (ByVal hInst As HINSTANCE, ByVal hPrevInst As HINSTANCE, _
 	' crea una ventana OCC
 	OCC_Activo=OCCViewer_Init(cast(long,OCCWin),@ctx,@vwr) ' nota: ctx y vwr SIN utilidad actual, para el futuro
 	'print "manejadores OCC:";ctx,vwr
+	
+	' demo para propositos de depuracion (tambien se llama desde "ayudas/demo boolean")
+	demo()
 		
 	' message loop
 	While GetMessage(@msg_, NULL, 0, 0)
