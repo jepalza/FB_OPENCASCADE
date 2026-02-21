@@ -5,9 +5,11 @@
 
 #include "occviewer.h"
 
-#include <AIS_InteractiveContext.hxx>
-#include <AIS_Shape.hxx>
-#include <AIS_ViewController.hxx>
+// jepalza
+#include <AIS_InteractiveContext.hxx> // control de objetos agregados, mover, rotar, ampliar, etc
+#include <AIS_Shape.hxx> // control de objetos que van al visualizador
+#include <AIS_ViewController.hxx> // eventos y control del visualizador
+
 #include <OpenGl_GraphicDriver.hxx>
 #include <OSD.hxx>
 #include <V3d_View.hxx>
@@ -26,10 +28,10 @@
 #include <WNT_Window.hxx>
 
 // globales para la multitarea de FreeBasic
+HWND FreeBasicWin;
 Handle(AIS_InteractiveContext) myContextGlobal;
 Handle(V3d_View) myViewGlobal;
-HWND FreeBasicWin;
-  Handle(V3d_Viewer) aViewer;
+Handle(V3d_Viewer) aViewer;
   
 //! Sample single-window viewer class.
 class OccWinViewer : public AIS_ViewController
@@ -86,6 +88,9 @@ public:
   const Handle(V3d_Viewer)& Viewer() const { return aViewer; }
 
 private:
+	int dummy=0;
+// jepalza: por el momento, no empleo las llamadas internas, se hace todo desde FreeBasic
+/*
   // ! Handle expose event.
   virtual void ProcessExpose() override
   {
@@ -139,6 +144,7 @@ private:
     }
     return ::DefWindowProcW (theWnd, theMsg, theParamW, theParamL);
   }
+  */
 };
 
 
@@ -172,61 +178,9 @@ int OCCViewer_Init(  HWND FB_Window ,
   return 1; 
 }
 
-
-int OCCViewer_Add(TopoDS_Shape aisShape, int mode)
+// eventos graficos: modo=0 solo movimientos, modo=0(defecto) refresca pantalla, modo=2 cambia medidas de pantalla
+int OCCViewer_Update(int modo=0)
 {
-	// Handle(AIS_InteractiveObject) ToShape = new AIS_Shape(aisShape);
-	Handle(AIS_Shape) ToShape = new AIS_Shape(aisShape);
-
-	//WinApp.myContext->SetColor(WinApp.myContext->Current(),Quantity_NOC_BLUE1);
-
-	myContextGlobal->Display (ToShape, mode, 0, true); //AIS_Shaded, mode, false);
-	myContextGlobal->SetDisplayMode(ToShape,AIS_Shaded, true);
-
-   myViewGlobal->FitAll (0.01, false);
-   myViewGlobal->Redraw();
-	 
-	return 1; // correcto
-}
-
-
-// eventos graficos: modo=0 solo movimientos, modo=1(defecto) refresca pantalla, modo=2 cambia medidas de pantalla
-int OCCViewer_Update(int modo=1, int mx=0, int my=0, int v1=0, int v2=0, int mb=0)
-{
-	if(mb==1) // boton izquierdo, sin tecla control, saleccionar objeto
-	{	
-		// seleccionar un objeto en la posicion que hacemos pulsacion del raton
-		myContextGlobal->Activate(0); // Activate shape selection mode (mode 0)
-		myContextGlobal->MoveTo (mx, my, myViewGlobal, false);
-		// myContextGlobal->Select(mx,my,mx+v1,my+v2,myViewGlobal,true); // Rectangle selection
-		myContextGlobal->Select(true); // Click selection
-	}
-
-	//myViewGlobal->StartRotation(mx, my); // punto de rotacion
-	// control de eventos de raton
-	if(mb==2) // boton izquierdo, rotaciones
-	{
-		myViewGlobal->StartRotation(0, 0); // punto de rotacion en el centro de la ventana
-		myViewGlobal->Rotation(v1,v2);
-	}
-	
-	if(mb==3) // boton derecho translaciones
-	{
-		//myViewGlobal->Place (0, 0, 1); // desde el centro (por ahora)
-		myViewGlobal->Translate(v1,v2,0); // x,y,z=0
-	}
-	
-	if(mb==4) // boton medio lupas
-	{
-		// myViewGlobal->Scale(v1,v2,0); // x,y,z=0
-		myViewGlobal->Zoom(mx,my,v1,v2); 
-	}
-
-// gp_Trsf translationTransform;
-// translationTransform.SetTranslation(gp_Vec(dx, dy, dz));
-// myContextGlobal->SetLocation(aisShape, TopLoc_Location(translationTransform));
-
-
 	// en caso de evento RESIZE desde windows
 	if (modo==2)
 	{
@@ -235,14 +189,160 @@ int OCCViewer_Update(int modo=1, int mx=0, int my=0, int v1=0, int v2=0, int mb=
 		  myViewGlobal->InvalidateImmediate();
 	}
 	
-	// actualiza pantalla solo si se indica
+	// centra la pantalla solo si se indica
 	if (modo==1) myViewGlobal->FitAll (0.01, false);
-	
+
 	// por defecto redibuja
    myViewGlobal->Redraw();
 	  
 	return 1; // correcto
 }
+
+// añade figuras al visualizador
+AISShape OCCViewer_Add(TopoDS_Shape MyShape, int mode)
+{
+	Handle(AIS_Shape) ToShape = new AIS_Shape(MyShape); // objeto interactivo desde figura (toposhape to AISshape)
+
+	myContextGlobal->Display (ToShape, mode, 0, true);
+	myContextGlobal->SetDisplayMode(ToShape,AIS_Shaded, true);
+
+	// actualiza visualizador en modo "fit all" (ver todo, o autoajuste)
+   OCCViewer_Update(1);
+
+	return (long &)ToShape;
+}
+
+// convierte coordenadas 2D del raton a 3D en el espacio OCC
+int OCCViewer_Mouse3D(int mx, int my, double* xc, double* yc, double* zc)
+{
+	Standard_Real xp,yp,zp;
+	myViewGlobal->Convert(mx, my, xp, yp, zp);
+	*xc=xp;
+	*yc=yp;
+	*zc=zp;
+	return 1;
+}
+
+AISShape OCCViewer_Transform(AISShape MyAISShape, gp_Pnt *orig, gp_Pnt *dest) //double xp,double yp, double zp)
+{
+/*
+		// seleccionar un objeto en la posicion que hacemos pulsacion del raton
+		myContextGlobal->Activate(0); // Activate shape selection mode (mode 0)
+		myContextGlobal->MoveTo (mx, my, myViewGlobal, true);
+		myContextGlobal->Select(true); // Click selection
+
+		//Handle(AIS_InteractiveObject) AIS_Selected_Shape = new AIS_Shape(ActualShape);
+		//myContextGlobal->Select(mx,my,mx+v1,my+v2,myViewGlobal,true); // Rectangle selection
+		//ActualShape = myContextGlobal->SelectedShape();
+		//const TopoDS_Shape ActualShape ;//= myContextGlobal->SelectedShape();
+		// TopoDS_Shape* retVal = new TopoDS_Shape(ActualShape);
+		Handle(AIS_InteractiveObject) selected = myContextGlobal->SelectedInteractive();
+		//printf("%d %d\n",&ActualShape,retVal);
+		// modo: completa (0), vertices (1), bordes (2), caras (4)
+		myContextGlobal->Activate(selected, 0, true);
+		
+		gp_Pnt oldPnt = gp_Pnt(0,0,0); // Previous mouse 3D position
+      gp_Pnt newPnt = gp_Pnt(mx, my, 0); // Current mouse 3D position
+		gp_Trsf aTrsf;
+		aTrsf.SetTranslation(oldPnt, newPnt); // Translation example
+		myContextGlobal->SetLocation(selected, aTrsf); // Move the shape
+		// myContextGlobal->Redisplay(selected, Standard_True); // Refresh the view
+		//TopoDS_Shape shape = Handle(AIS_Shape)::DownCast(selected)->Shape();
+myContextGlobal->InitSelected();
+// if (myContextGlobal->MoreSelected()) 
+{
+Handle(AIS_Shape) aisShape = Handle(AIS_Shape)::DownCast(selected); //myContextGlobal->SelectedInteractive()); 
+		// Handle(AIS_Shape) aisShape = Handle(AIS_Shape)::DownCast(selected );
+		TopoDS_Shape shape = aisShape->Shape();
+		///OCCViewer_Add(shape,0);
+		//MyShape=&ActualShape;
+		//return ActualShape;
+		// pp=&shape;
+*/
+	
+	Handle(AIS_InteractiveObject) selected = MyAISShape;//myContextGlobal->SelectedInteractive();
+	
+// for (myContextGlobal->InitSelected(); myContextGlobal->MoreSelected(); myContextGlobal->NextSelected()) {
+// Handle(SelectMgr_EntityOwner) anOwner = myContextGlobal->SelectedOwner();
+// }
+
+	myContextGlobal->Display(selected,Standard_False);
+	// myContextGlobal->ResetLocation(selected);
+	myContextGlobal->Activate(selected, 0, true);
+	// printf("ori:%f %f %f\n",orig->X(),orig->Y(),orig->Z());	
+	// printf("dst:%f %f %f\n",dest->X(),dest->Y(),dest->Z());
+	gp_Pnt oldPnt = *orig;//gp_Pnt(xp1,yp1,zp1); // Previous mouse 3D position
+   gp_Pnt newPnt = *dest;//gp_Pnt(xp, yp, zp); // Current mouse 3D position
+	gp_Trsf aTrsf;
+	aTrsf.SetTranslation(oldPnt, newPnt); // Translation example
+	myContextGlobal->SetLocation(selected, aTrsf); // Move the shape
+	myContextGlobal->Redisplay(selected, Standard_True); // update
+
+
+
+		// myContextGlobal->Activate(0); // Activate shape selection mode (mode 0)
+		// myContextGlobal->MoveTo (mx, my, myViewGlobal, true);
+		// if (!myContextGlobal->Select(true)) {printf("11\n"); return NULL;} // Click selection
+		if (myContextGlobal->HasDetected()) {
+			// Handle(AIS_InteractiveObject) 
+			selected = myContextGlobal->DetectedInteractive();
+			return (long &)selected;
+		}
+
+	// printf("%d %d\n",pp,&retVal);
+	
+// gp_Trsf translationTransform;
+// translationTransform.SetTranslation(gp_Vec(dx, dy, dz));
+// myContextGlobal->SetLocation(aisShape, TopLoc_Location(translationTransform));
+	//return MyShape;
+	
+	return NULL;
+}
+
+// eventos raton, posicion y seleccion de figura 
+AISShape OCCViewer_Mouse(int mx=0, int my=0, int v1=0, int v2=0, int mb=0)
+{
+	//myViewGlobal->StartRotation(mx, my); // punto de rotacion
+	
+	// control de eventos de raton
+	if(mb==2) // boton izquierdo, rotaciones
+	{
+		myViewGlobal->StartRotation(0, 0); // punto de rotacion en el centro de la ventana
+		myViewGlobal->Rotation(v1,v2);
+	}
+	
+	else if(mb==3) // boton derecho translaciones
+	{
+		//myViewGlobal->Place (0, 0, 1); // desde el centro (por ahora)
+		myViewGlobal->Translate(v1,v2,0); // x,y,z=0
+	}
+	
+	else if(mb==4) // boton medio lupas
+	{
+		// myViewGlobal->Scale(v1,v2,0); // x,y,z=0
+		myViewGlobal->Zoom(mx,my,v1,v2); 
+	}
+	
+	//else // por defecto, seleccion de figura al pasar el raton sobre ella
+	if(mb==1) // boton izquierdo, sin tecla control, saleccionar objeto
+	{	
+		// seleccionar un objeto en la posicion que hacemos pulsacion del raton
+		myContextGlobal->Activate(0); // Activate shape selection mode (mode 0)
+		myContextGlobal->MoveTo (mx, my, myViewGlobal, true);
+		// if (!myContextGlobal->Select(true)) {printf("11\n"); return NULL;} // Click selection
+		if (myContextGlobal->HasDetected()) {
+			Handle(AIS_InteractiveObject) selected = myContextGlobal->DetectedInteractive();
+			return (long &)selected;
+		}
+		//TopoDS_Shape selected = myContextGlobal->SelectedShape();
+		//if(selected.IsNull()) {printf("44\n"); return NULL;}; // si nada es seleccionado
+	}	
+
+	return NULL; // nada seleccionado
+}
+
+
+
 
 /*
 // Example within a mouse wheel event

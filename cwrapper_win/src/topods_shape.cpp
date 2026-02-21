@@ -30,9 +30,3 @@ TopoDSWire TopoDSShape_Wire(TopoDSShape shape) {
     TopoDS::Wire(*s); // Throws exception on the wrong type
     return (void*) s;
 }
-
-AISShape TopoDSShapeToAIS(TopoDSShape shape) {
-    TopoDS_Shape *s = (TopoDS_Shape *) shape;
-    //AIS_Shape::SetShape(*s); // Throws exception on the wrong type
-    return (void*) s;
-}
