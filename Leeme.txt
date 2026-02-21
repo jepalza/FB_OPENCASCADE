@@ -1,6 +1,6 @@
 Joseba Epalza <jepalza> gmail punto com , Enero 2026
 
-C-WRAPPER de las librerias OpenCascade < https://dev.opencascade.org/ > version 7.6
+C-WRAPPER de las librerias OpenCascade < https://dev.opencascade.org/ > version 7.7
 empleando las rutinas de < https://github.com/marcuswu/occwrapper > con ligeras modificaciones
 
 
@@ -10,5 +10,6 @@ poderlo llamar desde FreeBasic.
 
 Licencia libre de uso, solo menciona su procedencia en caso de su publicacion.
 las licencias a los propietarios antes mencionados, estan indicadas en sus respectivas paginas
+
 
 (nota: ne se emplean acentos para evitar que se vea mal el texto en otros idiomas)
