@@ -47,6 +47,7 @@
 #Define ID_BOTON42  2042
 #Define ID_BOTON43  2043
 #Define ID_BOTON44  2044
+#Define ID_BOTON45  2045
 
 #Define IDR_MENUS	100
 

@@ -4,7 +4,7 @@ dim as string sa,sb,sc
 dim as integer x,y
 dim as integer w,h,nbut
 
-nbut=45 'num botones
+nbut=46 'num botones desde el 0 (46 en este caso de 0 a 45)
 h=24 ' medidas 24x24 
 
 w=nbut*h
