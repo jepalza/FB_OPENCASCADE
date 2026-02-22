@@ -63,7 +63,9 @@ public:
     // view setup
     myView = new V3d_View (aViewer);
     myView->SetWindow (aWindow);
-    myView->SetBackgroundColor (Quantity_NOC_GRAY50);
+	 // fondo principal
+    myView->SetBackgroundColor (Quantity_NOC_GRAY30); // medio gris -> Quantity_NOC_GRAY50
+	 // ejes estandar con denominacion XYZ
     myView->TriedronDisplay (Aspect_TOTP_LEFT_LOWER, Quantity_NOC_WHITE, 0.1);
     myView->ChangeRenderingParams().RenderResolutionScale = 2.0f;
 	 
@@ -276,7 +278,8 @@ Handle(AIS_Shape) aisShape = Handle(AIS_Shape)::DownCast(selected); //myContextG
 	gp_Trsf aTrsf;
 	aTrsf.SetTranslation(oldPnt, newPnt); // Translation example
 	myContextGlobal->SetLocation(selected, aTrsf); // Move the shape
-	myContextGlobal->Redisplay(selected, Standard_True); // update
+	myContextGlobal->SetMaterial(selected,Graphic3d_NOM_PLASTIC,Standard_False);
+	myContextGlobal->Display(selected, Standard_True); // update
 
 
 
@@ -364,3 +367,7 @@ void wheelEvent(QWheelEvent *event) {
     myView->Invalidate(); // Refresh the view
 }
 */
+
+// 46 demos (de 0 a 45) para ser llamadas desde FreeBasic
+// copiadas (y adaptadas) desde las demos MFC "MODELING" de OCCT7.7 carpeta "SAMPLES"
+#include "modeling_demo.cpp"
