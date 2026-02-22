@@ -23,6 +23,7 @@ extern "C" {
 	  __declspec(dllexport) int __cdecl OCCViewer_Mouse3D(int mx, int my, double* xc, double* yc, double* zc);
 	  __declspec(dllexport) AISShape __cdecl OCCViewer_Transform(AISShape MyAISShape, gp_Pnt *orig, gp_Pnt *dest); //double xp,double yp, double zp); // modificaciones a las formas
 	//__declspec(dllexport) int __cdecl OCCViewer_Close( HWND FBWindow );
+	  __declspec(dllexport) void __cdecl OCCViewer_Demo( int MyDemo );
 						
 #ifdef __cplusplus
 }
