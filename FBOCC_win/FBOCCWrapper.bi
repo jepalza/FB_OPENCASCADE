@@ -77,7 +77,8 @@
   Declare Function OCCViewer_Mouse Cdecl Alias "OCCViewer_Mouse"(byval mx as long=0,byval my as long=0,byval v1 as long=0,byval v2 as long=0,byval mb as long=0) As AISShape
   Declare Function OCCViewer_Mouse3D Cdecl Alias "OCCViewer_Mouse3D"(byval mx as long,byval my as long,byval xp as Double Ptr,byval yp as Double Ptr,byval zp as Double Ptr) As Long
   Declare Function OCCViewer_Transform Cdecl Alias "OCCViewer_Transform"(MyAISShape As AISShape,ByVal orig As gpPnt,ByVal dest As gpPnt) As AISShape
-
+  Declare sub OCCViewer_Demo Cdecl Alias "OCCViewer_Demo"(byval MyDemo as long=0)
+	
 '----------------------------------------
 ' Viewer Events (raton y vistas) (jepalza)
   Declare Function FLUSHView_Init Cdecl Alias "FLUSHView_Init"() As AISViewController 
