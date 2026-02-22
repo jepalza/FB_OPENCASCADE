@@ -25,10 +25,13 @@ The control of the graphic window has been improved, now allowing it to be manag
 For control viewer, use CONTROL Key and mouse buttons.
 
 Update 21-feb.-2026 to V0.31:
+
 -repaired FREETYPE libraries error
+
 -working on more features on viewer, like transforms
 
 Update 22-feb.2026 to 0.32:
+
 -new 46 examples added from the Opencascade 7.7 “modeling” demo
 
 using the example from < https://github.com/gkv311/occt-hello > with a lot of modifications so that
@@ -96,10 +99,13 @@ se ha mejorado el control de la ventana grafica, permitiendo ahora su manejo des
 Para controlar el visualizador, emplear la tecla CONTROL y el Raton.
 
 Actualizacion 21-feb-2026 a V0.31:
+
 -reparado un error en librerias FREETYPE
+
 -trabajando en mejorar el visualizador, como añadir transformaciones
 .
 Actualizacion 22-feb.2026 a V0.32:
+
 -añadidos 46 nuevos ejemplos desde Opencascade 7.7 demo “modeling” 
 
 usando partes del visualizador de ejemplo < https://github.com/gkv311/occt-hello > con muchas modificaciones para
