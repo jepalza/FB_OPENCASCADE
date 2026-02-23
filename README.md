@@ -39,7 +39,7 @@ MINGW's own libraries may be necessary to execute the code compiled in FB:
 `libstdc++-6.dll`  
 `libwinpthread-1.dll`  
 
-***The reason for using version OCCT V7.7 from 2022 on WIN32 is for practical reasons, given that since versions 7.8 there is no longer a Windows installer, and furthermore, there is no longer a project for VC10 and support for X32 has been removed, and I, even in 2026, am still working on x32 and VC10, I can't avoid it....***  
+***The reason for using version OCCT V7.7 from 2022 on WIN32 is for practical reasons, given that since versions 7.8 there is no longer a Windows installer, and furthermore, there is no longer a project for VC10 and support for X32 has been removed, and I, even in 2026, am still working on x32 and VC10, I can't avoid it....***  :blush: 
 
 
 **Translated with DeepL.com (free version)**  
@@ -77,4 +77,4 @@ Pueden ser necesarias las librerías propias de MINGW para ejecutar el código c
 `libstdc++-6.dll`  
 `libwinpthread-1.dll`  
 
-***El motivo de emplear la versión OCCT V7.7 de 2022 en WIN32 es por razones practicas, dado que desde las versiones 7.8 ya no existe instalador windows, y además, ya no hay proyecto para VC10 y el soporte para X32 se ha eliminado, y yo aun, en 2026, sigo trabajando en x32 y en VC10, no puedo evitarlo....***
+***El motivo de emplear la versión OCCT V7.7 de 2022 en WIN32 es por razones practicas, dado que desde las versiones 7.8 ya no existe instalador windows, y además, ya no hay proyecto para VC10 y el soporte para X32 se ha eliminado, y yo aun, en 2026, sigo trabajando en x32 y en VC10, no puedo evitarlo....*** :blush:
